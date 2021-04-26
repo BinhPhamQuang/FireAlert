@@ -10,7 +10,9 @@
     <color name="yellow">#E98C00</color>
     <color name="red">#CE0303</color>
     <color name="background">#BBE1FA</color>
-    <color name="button_color">#3282B8</color>
+    <color name="_3282B8">#3282B8</color>
+    <color name="button_color">#5fa1ce</color>
     <color name="red_white">#E41E1E</color>
     <color name="green">#05DA0D</color>
+    <color name="dark">#0F4C75</color>
 </resources>
