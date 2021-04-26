@@ -75,6 +75,8 @@
             android:background="@drawable/layout_button"
             android:text="I will fix it now !"
             android:textColor="@color/yellow"
+            android:textAllCaps="false"
+            android:textSize="25dp"
             app:backgroundTint="#000000" />
         <Button
             android:layout_marginTop="10dp"
@@ -84,7 +86,9 @@
             android:layout_below="@id/btn_fixitnow"
             android:background="@drawable/layout_button"
             android:text="Ignore !"
+            android:textAllCaps="false"
             app:backgroundTint="#000000"
+            android:textSize="25dp"
             android:textColor="@color/yellow"/>
 
 
