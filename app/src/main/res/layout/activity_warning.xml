@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_fixitnow"
             android:background="@drawable/layout_button"
-            android:text="I will fix it now !"
+            android:text="Ignore !"
             app:backgroundTint="#000000"
             android:textColor="@color/yellow"/>
 
