@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/red"
+    android:layout_height="match_parent"
+    tools:context=".AlertActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="50dp"
+        >
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:id="@+id/imgFire"
+            android:layout_width="195dp"
+            android:layout_height="237dp"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/fire" />
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgFire"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            >
+        <TextView
+            android:id="@+id/tv_nameRoomFire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Room 4 "
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="55dp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="is firing..."
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="55dp"
+            android:textColor="@color/black"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_call_114"
+            android:layout_marginTop="40dp"
+            android:layout_width="152dp"
+            android:layout_height="152dp"
+            android:layout_below="@id/layout1"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/circle_button"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:text="Call"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="114"
+                android:textAlignment="center"
+                android:textColor="@color/green"
+                android:textSize="50dp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
