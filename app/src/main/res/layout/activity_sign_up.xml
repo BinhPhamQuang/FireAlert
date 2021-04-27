@@ -13,7 +13,7 @@
         <ImageView
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:layout_marginTop="20dp"
+
             android:layout_centerHorizontal="true"
             android:id="@+id/imageView"
             android:layout_width="282dp"
@@ -45,10 +45,11 @@
             />
         <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="230dp"
             android:layout_below="@id/tv_2"
             android:id="@+id/viewpager_signup"/>
         <RelativeLayout
+            android:id="@+id/layout2"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:layout_width="match_parent"
@@ -77,6 +78,24 @@
                 android:background="@drawable/layout_button"
                 android:backgroundTint="@color/_3282B8"
                 app:srcCompat="@drawable/next" />
+
         </RelativeLayout>
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/layout2"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:dotsColor="@color/_3282B8"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="16dp"
+            app:dotsSpacing="4dp"
+            app:dotsWidthFactor="2.5"
+            app:selectedDotColor="@color/dark"
+            app:progressMode="true"
+            />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

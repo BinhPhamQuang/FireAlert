@@ -19,6 +19,8 @@ import com.example.firealert.Adapter.ViewPageAdapter;
 import com.example.firealert.fragment_signup.FragmentSignUp1;
 import com.example.firealert.fragment_signup.FragmentSignup2;
 import com.example.firealert.fragment_signup.FragmentSignup3;
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
+import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -27,6 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
     ImageButton btnNext;
     TextView tv1;
     ViewPageAdapter viewPageAdapter;
+    DotsIndicator dotsIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnBack= findViewById(R.id.btnBack);
         btnNext= findViewById(R.id.btnNext);
         tv1 = findViewById(R.id.tv_top);
+        dotsIndicator = findViewById(R.id.dots_indicator);
 
 
 
@@ -87,6 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
                 viewPageAdapter.addFragment(FragmentSignup2.getInstance(),"2");
                 viewPageAdapter.addFragment(FragmentSignup3.getInstance(),"3");
                 viewPager.setAdapter(viewPageAdapter);
+                dotsIndicator.setViewPager(viewPager);
             }
         });
     }
