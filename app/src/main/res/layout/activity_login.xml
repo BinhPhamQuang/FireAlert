@@ -17,7 +17,7 @@
     <ImageView
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="50dp"
        android:layout_centerHorizontal="true"
         android:id="@+id/imageView"
         android:layout_width="282dp"
@@ -95,6 +95,7 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/btn_signUp"
         android:paddingTop="5dp"
         android:layout_width="100dp"
         android:layout_height="30dp"
