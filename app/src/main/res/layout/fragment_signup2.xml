@@ -9,11 +9,11 @@
     >
     <EditText
         android:layout_marginTop="10dp"
-        android:id="@+id/txt_usernameSignup"
+        android:id="@+id/txt_yournameSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/textbox"
-        android:hint="Username"
+        android:hint="Your name"
         android:textColorHint="@color/white"
         android:paddingTop="18dp"
         android:paddingBottom="18dp"
@@ -22,11 +22,11 @@
         android:textColor="@color/white"/>
     <EditText
         android:layout_marginTop="10dp"
-        android:id="@+id/txt_passwordSignup"
+        android:id="@+id/txt_emailSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/textbox"
-        android:hint="Password"
+        android:hint="Email"
         android:textColorHint="@color/white"
         android:paddingTop="18dp"
         android:paddingBottom="18dp"
@@ -35,11 +35,11 @@
         android:textColor="@color/white"/>
     <EditText
         android:layout_marginTop="10dp"
-        android:id="@+id/txt_passwordSignupAgain"
+        android:id="@+id/txt_phoneNumberSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/textbox"
-        android:hint="Password again"
+        android:hint="Phone number"
         android:textColorHint="@color/white"
         android:paddingTop="18dp"
         android:paddingBottom="18dp"

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FireAlert">
         <activity android:name=".SignUpActivity"></activity>
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity" android:launchMode="singleTask" />
         <activity android:name=".AlertActivity" />
         <activity android:name=".WarningActivity" />
         <activity android:name=".MainActivity">
