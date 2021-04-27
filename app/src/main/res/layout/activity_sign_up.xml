@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/logo" />
         <TextView
-            android:id="@+id/tv_1"
+            android:id="@+id/tv_top"
             android:layout_marginTop="-40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign up"
-            android:layout_below="@id/tv_1"
+            android:layout_below="@id/tv_top"
             android:id="@+id/tv_2"
             android:textColor="@color/dark"
             android:textSize="22dp"

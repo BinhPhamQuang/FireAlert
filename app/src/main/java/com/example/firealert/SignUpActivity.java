@@ -8,9 +8,11 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Adapter.ViewPageAdapter;
@@ -23,6 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
     ViewPager viewPager;
     ImageButton btnBack;
     ImageButton btnNext;
+    TextView tv1;
     ViewPageAdapter viewPageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,13 @@ public class SignUpActivity extends AppCompatActivity {
         viewPager= findViewById(R.id.viewpager_signup);
         btnBack= findViewById(R.id.btnBack);
         btnNext= findViewById(R.id.btnNext);
+        tv1 = findViewById(R.id.tv_top);
+
+
+
+
         getTab();
+        setColorforTopLabel();
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +71,12 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
     }
-
+    private void setColorforTopLabel()
+    {
+        String a=  "<font color=" + "#0F4C75" + ">" + "Get started" + "</font>";
+        String b=  "<font color=" + "#3282B8" + ">" + " with new account !" + "</font>";
+        tv1.setText(Html.fromHtml(a+b));
+    }
     private void getTab()
     {
          viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
