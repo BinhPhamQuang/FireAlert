@@ -8,18 +8,18 @@ import android.view.View;
 import android.widget.ImageButton;
 
 public class HomeActivity extends AppCompatActivity {
-
+    ImageButton btnAddRoom;
+    View layoutAddroom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        ImageButton btnAddRoom = (ImageButton) findViewById(R.id.btnAddRoom);
+        layoutAddroom = findViewById(R.id.lb_addroom);
+        btnAddRoom = (ImageButton) findViewById(R.id.btnAddRoom);
         btnAddRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent= new Intent(getApplicationContext(),AddRoomActivity.class);
-//                startActivity(intent);
+                    layoutAddroom.setVisibility(View.VISIBLE);
             }
         });
 
