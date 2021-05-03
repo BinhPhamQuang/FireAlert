@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FireAlert">
         <activity
+            android:name=".TipsActivity"
+            android:label="@string/title_activity_tips"
+            android:theme="@style/Theme.FireAlert.NoActionBar"></activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.FireAlert.NoActionBar"></activity>
+            android:theme="@style/Theme.FireAlert.NoActionBar" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
