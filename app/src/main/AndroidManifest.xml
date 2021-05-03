@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireAlert">
+        <activity android:name=".AboutActivity"></activity>
         <activity
             android:name=".TipsActivity"
             android:label="@string/title_activity_tips"
-            android:theme="@style/Theme.FireAlert.NoActionBar"></activity>
+            android:theme="@style/Theme.FireAlert.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
