@@ -30,7 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         btnAddRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutAddroom.setVisibility(View.VISIBLE);
+                    layoutAddroom.setVisibility(View.VISIBLE);
             }
         });
 

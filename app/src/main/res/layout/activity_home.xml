@@ -6,14 +6,15 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context=".HomeActivity">
-<LinearLayout
-    android:padding="5dp"
+<RelativeLayout
+    android:padding="0dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
     <RelativeLayout
-
+        android:padding="5dp"
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -35,6 +36,9 @@
     </RelativeLayout>
 
     <RelativeLayout
+
+        android:layout_below="@id/top_bar"
+        android:id="@+id/layout_1"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -167,12 +171,14 @@
             android:textColor="#BBE1FA"
             android:gravity="top"
             />
-    </RelativeLayout>
+    </RelativeLayout
+        >
 
 
 
 
     <TableLayout
+        android:layout_below="@id/layout_1"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
@@ -230,6 +236,12 @@
                 app:srcCompat="@drawable/details_dark" />
         </TableRow>
     </TableLayout>
+    <include android:id="@+id/lb_addroom"  layout="@layout/add_room"
+        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:translationZ="90dp"
+        android:layout_width="match_parent" />
 
-</LinearLayout>
+</RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
