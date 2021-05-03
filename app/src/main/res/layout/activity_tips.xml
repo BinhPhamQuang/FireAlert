@@ -1,95 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+
     tools:context=".TipsActivity">
-
-    <com.google.android.material.appbar.AppBarLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:layout_height="match_parent">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="#3282B8"
+            android:layout_height="wrap_content"
             >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Tips"
-                android:textStyle="bold"
-                android:textSize="22dp"
-                android:textColor="#BBE1FA"
-                android:gravity="center"
-                />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="#3282B8"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Tips"
+                    android:textStyle="bold"
+                    android:textSize="22dp"
+                    android:textColor="#BBE1FA"
+                    android:gravity="center"
+                    />
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginLeft="13dp"
+                    android:backgroundTint="#3282B8"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="0dp"
+                    app:srcCompat="@drawable/back"
+                    />
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            android:layout_below="@id/appbar"
+            android:id="@+id/viewpager_tips"/>
+        <RelativeLayout
+            android:id="@+id/layout2"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewpager_tips"
+            >
             <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginLeft="13dp"
-                android:backgroundTint="#3282B8"
                 android:layout_alignParentRight="true"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                android:padding="0dp"
-                app:srcCompat="@drawable/back"
-                />
-        </androidx.appcompat.widget.Toolbar>
+                android:id="@+id/btnNext"
+                android:layout_width="82dp"
+                android:layout_height="42dp"
+                android:background="@drawable/layout_button"
+                android:backgroundTint="@color/_3282B8"
+                app:srcCompat="@drawable/next" />
+            <ImageButton
 
-    </com.google.android.material.appbar.AppBarLayout>
-    <View
-        android:id="@+id/imageTips1"
-        android:layout_width="412dp"
-        android:layout_height="360dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="-1dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="47dp"
-        android:background="@drawable/tips1"
-        />
-    <TextView
-        android:layout_width="209dp"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="102dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="415dp"
-        android:text="ROOMS' DETAILS"
-        android:textStyle="bold"
-        android:textSize="23dp"
-        android:textColor="#0F4C75"
-        android:gravity="center_horizontal|top"
-        />
-    <TextView
-        android:layout_width="327dp"
-        android:layout_height="119dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="43dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="455dp"
-        android:text="You can monitor the gas concentration in each room and take appropriate actions."
-        android:textSize="21dp"
-        android:textColor="#0F4C75"
-        android:gravity="center_horizontal|top"
-        />
-    <TextView
-        android:layout_width="128dp"
-        android:layout_height="41dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="141dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="600dp"
-        android:text="1/2"
-        android:textSize="15dp"
-        android:textColor="#0F4C75"
-        android:gravity="center_horizontal|top"
-        />
+                android:layout_alignParentLeft="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:id="@+id/btnBack"
+                android:layout_width="82dp"
+                android:layout_height="42dp"
+                android:rotation="180"
+                android:background="@drawable/layout_button"
+                android:backgroundTint="@color/_3282B8"
+                app:srcCompat="@drawable/next" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </RelativeLayout>
+
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/layout2"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            app:dotsColor="@color/_3282B8"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="16dp"
+            app:dotsSpacing="4dp"
+            app:dotsWidthFactor="2.5"
+            app:selectedDotColor="@color/dark"
+            app:progressMode="true"
+            />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

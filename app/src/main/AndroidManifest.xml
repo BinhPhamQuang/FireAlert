@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireAlert">
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".RoomDetailActivity"></activity>
+        <activity android:name=".AboutActivity" />
         <activity
             android:name=".TipsActivity"
             android:label="@string/title_activity_tips"
