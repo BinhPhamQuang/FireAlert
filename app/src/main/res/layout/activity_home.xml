@@ -41,7 +41,136 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="@drawable/layout_button"
-        android:backgroundTint="@color/button_color"/>
+        android:backgroundTint="@color/button_color">
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="131dp"
+            android:layout_height="38dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="288dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="11dp"
+            android:text="19-04-2021"
+            android:textStyle="bold"
+            android:textSize="17dp"
+            android:textColor="#BBE1FA"
+            android:gravity="top"
+            />
+        <TextView
+            android:layout_width="164dp"
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="19dp"
+            android:text="Your house"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#0F4C75"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="153dp"
+            android:layout_height="57dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="240dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="43dp"
+            android:text="7:00 AM"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:textColor="#0F4C75"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/num_of_room"
+            android:layout_width="164dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="64dp"
+            android:text="Num. of rooms: 4"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="#0F4C75"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/gas_concent"
+            android:layout_width="337dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="98dp"
+            android:text="Gas concentration"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="#0F4C75"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/room_1"
+            android:layout_width="71dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="134dp"
+            android:text="Room 1: 0"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:textColor="#BBE1FA"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/room_2"
+            android:layout_width="71dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="105dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="134dp"
+            android:text="Room 2: 0"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:textColor="#BBE1FA"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/room_3"
+            android:layout_width="71dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="196dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="134dp"
+            android:text="Room 3: 12"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:textColor="#BBE1FA"
+            android:gravity="top"
+            />
+        <TextView
+            android:id="@+id/room_4"
+            android:layout_width="71dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="286dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="134dp"
+            android:text="Room 4: 4"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:textColor="#BBE1FA"
+            android:gravity="top"
+            />
+    </RelativeLayout>
+
+
+
 
     <TableLayout
         android:layout_marginLeft="5dp"
@@ -52,6 +181,7 @@
         >
         <TableRow android:gravity="center" android:layout_marginBottom="10dp" >
             <ImageButton
+                android:id="@+id/btnAddRoom"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/layout_button"
                 android:backgroundTint="@color/button_color"
@@ -59,18 +189,24 @@
                 android:scaleType="fitCenter"
                 android:layout_width="188dp"
                 android:layout_height="175dp"
-                app:srcCompat="@drawable/bell" />
+                android:adjustViewBounds="true"
+                android:padding="40dp"
+                app:srcCompat="@drawable/insert_dark" />
             <ImageButton
+                android:id="@+id/btnSettings"
                 android:background="@drawable/layout_button"
                 android:backgroundTint="@color/button_color"
                 android:layout_alignParentRight="true"
                 android:scaleType="fitCenter"
                 android:layout_width="188dp"
                 android:layout_height="175dp"
-                app:srcCompat="@drawable/bell" />
+                android:adjustViewBounds="true"
+                android:padding="40dp"
+                app:srcCompat="@drawable/settings_dark" />
         </TableRow>
         <TableRow android:gravity="center">
             <ImageButton
+                android:id="@+id/btnTips"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/layout_button"
                 android:backgroundTint="@color/button_color"
@@ -78,15 +214,20 @@
                 android:scaleType="fitCenter"
                 android:layout_width="188dp"
                 android:layout_height="175dp"
-                app:srcCompat="@drawable/bell" />
+                android:adjustViewBounds="true"
+                android:padding="40dp"
+                app:srcCompat="@drawable/tips" />
             <ImageButton
+                android:id="@+id/btnRoomDetail"
                 android:background="@drawable/layout_button"
                 android:backgroundTint="@color/button_color"
                 android:layout_alignParentRight="true"
                 android:scaleType="fitCenter"
                 android:layout_width="188dp"
                 android:layout_height="175dp"
-                app:srcCompat="@drawable/bell" />
+                android:adjustViewBounds="true"
+                android:padding="40dp"
+                app:srcCompat="@drawable/details_dark" />
         </TableRow>
     </TableLayout>
 
