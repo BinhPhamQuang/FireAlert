@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -29,11 +30,20 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        RelativeLayout btn_about = (RelativeLayout) findViewById(R.id.btn_about);
-        btn_about.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout rl_about = (RelativeLayout) findViewById(R.id.rl_about);
+        rl_about.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),AboutActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btn_signOut = (Button) findViewById(R.id.btn_signOut);
+        btn_signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getApplicationContext(),LoginActivity.class);
                 startActivity(intent);
             }
         });
