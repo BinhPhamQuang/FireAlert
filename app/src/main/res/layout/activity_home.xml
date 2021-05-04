@@ -18,10 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button cua m ne" />
 
         <ImageButton
             android:id="@+id/btnNotification"
@@ -40,25 +36,25 @@
         android:layout_below="@id/top_bar"
         android:id="@+id/layout_1"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="@drawable/layout_button"
         android:backgroundTint="@color/button_color">
         <TextView
-            android:id="@+id/date"
-            android:layout_width="131dp"
+            android:id="@+id/tv_currentDate"
+            android:layout_width="159dp"
             android:layout_height="38dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="288dp"
+            android:layout_marginLeft="225dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="11dp"
-            android:text="19-04-2021"
+            android:text="September 30, 2022"
             android:textStyle="bold"
             android:textSize="17dp"
             android:textColor="#BBE1FA"
-            android:gravity="top"
+            android:gravity="left|center_vertical"
             />
         <TextView
             android:layout_width="164dp"
@@ -73,15 +69,14 @@
             android:textColor="#0F4C75"
             android:gravity="top"
             />
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="153dp"
+        <DigitalClock
+            android:id="@+id/dc_currentTime"
+            android:layout_width="170dp"
             android:layout_height="57dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="240dp"
+            android:layout_marginLeft="225dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="43dp"
-            android:text="7:00 AM"
             android:textStyle="bold"
             android:textSize="35dp"
             android:textColor="#0F4C75"
@@ -115,64 +110,8 @@
             android:textColor="#0F4C75"
             android:gravity="top"
             />
-        <TextView
-            android:id="@+id/room_1"
-            android:layout_width="71dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="12dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="134dp"
-            android:text="Room 1: 0"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:textColor="#BBE1FA"
-            android:gravity="top"
-            />
-        <TextView
-            android:id="@+id/room_2"
-            android:layout_width="71dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="105dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="134dp"
-            android:text="Room 2: 0"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:textColor="#BBE1FA"
-            android:gravity="top"
-            />
-        <TextView
-            android:id="@+id/room_3"
-            android:layout_width="71dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="196dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="134dp"
-            android:text="Room 3: 12"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:textColor="#BBE1FA"
-            android:gravity="top"
-            />
-        <TextView
-            android:id="@+id/room_4"
-            android:layout_width="71dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="286dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="134dp"
-            android:text="Room 4: 4"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:textColor="#BBE1FA"
-            android:gravity="top"
-            />
-    </RelativeLayout
-        >
+
+    </RelativeLayout>
 
 
 

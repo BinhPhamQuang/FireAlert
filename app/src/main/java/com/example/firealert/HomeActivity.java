@@ -7,6 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
     ImageButton btnAddRoom;
@@ -25,6 +30,14 @@ public class HomeActivity extends AppCompatActivity {
                 layoutAddroom.setVisibility(View.INVISIBLE);
             }
         });
+
+
+        Date currentTime = Calendar.getInstance().getTime();
+        String formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
+        String[] splitDate = formattedDate.split(",");
+
+        TextView tv_currentDate = (TextView) findViewById(R.id.tv_currentDate);
+        tv_currentDate.setText(splitDate[1]  + ", " + splitDate[2]);
 
 
         btnAddRoom.setOnClickListener(new View.OnClickListener() {
@@ -56,8 +69,8 @@ public class HomeActivity extends AppCompatActivity {
         btnRoomDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
-//                startActivity(intent);
+                Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
+                startActivity(intent);
             }
         });
     }
