@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".PrivacyActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#3282B8"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Privacy"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:textColor="#BBE1FA"
+                android:gravity="center"
+                />
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginLeft="13dp"
+                android:backgroundTint="#3282B8"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="0dp"
+                app:srcCompat="@drawable/back"
+                />
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <ImageView
+        android:layout_width="102dp"
+        android:layout_height="102dp"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="68dp"
+        android:background="@drawable/avatar"
+        />
+    <TextView
+        android:layout_width="209dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="102dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="193dp"
+        android:text="Hello Binh Pham !"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:textColor="#0F4C75"
+        android:gravity="center_horizontal|top"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="48dp">
+        <TextView
+            android:layout_marginTop="220dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Password"
+            android:id="@+id/tv_changePassword"
+            android:textColor="@color/dark"
+            android:textSize="22dp"
+            android:textStyle="bold"
+            />
+
+        <EditText
+            android:layout_below="@id/tv_changePassword"
+            android:layout_marginTop="30dp"
+            android:id="@+id/txt_yourPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textbox"
+            android:hint="Your name"
+            android:textColorHint="@color/white"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/white"/>
+
+        <EditText
+            android:layout_below="@id/txt_yourPassword"
+            android:layout_marginTop="30dp"
+            android:id="@+id/txt_newPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textbox"
+            android:hint="New password"
+            android:textColorHint="@color/white"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/white"/>
+
+        <EditText
+            android:layout_below="@id/txt_newPassword"
+            android:layout_marginTop="30dp"
+            android:id="@+id/txt_confirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textbox"
+            android:hint="New password"
+            android:textColorHint="@color/white"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:layout_marginTop="50dp"
+            android:id="@+id/btn_saveChange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_confirmPassword"
+            android:background="@drawable/layout_button"
+            android:text="Save change"
+            android:textAllCaps="false"
+            app:backgroundTint="#3282B8"
+            android:textSize="22dp"
+            android:textColor="#BBE1FA"/>
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

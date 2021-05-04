@@ -39,6 +39,15 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        RelativeLayout rl_privacy = (RelativeLayout) findViewById(R.id.rl_privacy);
+        rl_privacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getApplicationContext(),PrivacyActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Button btn_signOut = (Button) findViewById(R.id.btn_signOut);
         btn_signOut.setOnClickListener(new View.OnClickListener() {
             @Override
