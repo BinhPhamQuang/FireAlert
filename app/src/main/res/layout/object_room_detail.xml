@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="15dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_gravity="center_horizontal"
+    >
+
+    <RelativeLayout
+        android:layout_width="377dp"
+        android:layout_height="133dp"
+        android:background="#BE3282B8"
+        >
+        <TextView
+            android:id="@+id/tv_roomName"
+            android:layout_width="147.55dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="13dp"
+            android:text="Room 1"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:textColor="#0F4C75"
+            android:gravity="center"
+            />
+
+        <View
+            android:layout_width="58dp"
+            android:layout_height="47dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="66dp"
+            android:background="@drawable/gas"
+            />
+
+        <TextView
+            android:id="@+id/tv_gas"
+            android:layout_width="120dp"
+            android:layout_height="47dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="70dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="66dp"
+            android:text="77.77"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:textColor="#BBE1FA"
+            android:gravity="bottom"
+            />
+
+        <View
+            android:id="@+id/antenna"
+            android:layout_width="42dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="298dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/antenna_green"
+            />
+
+
+        <View
+            android:id="@+id/verified"
+            android:layout_width="42dp"
+            android:layout_height="41dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="298dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="70dp"
+            android:background="@drawable/verified_green"
+            />
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
