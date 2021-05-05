@@ -1,40 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:background="@color/background"
     android:orientation="vertical"
     android:paddingLeft="40dp"
     android:paddingRight="40dp"
     >
-    <ImageView
-        android:id="@+id/iv_imageTips1"
-        android:layout_width="wrap_content"
-        android:layout_height="330dp"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds ="true"
-        android:background="@drawable/tips1"
-        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="ROOMS' DETAILS"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:text="Information"
         android:textStyle="bold"
-        android:textSize="23dp"
+        android:textSize="22dp"
         android:textColor="#0F4C75"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/iv_imageTips1"
-        android:gravity="center_horizontal|top"
+        android:gravity="left"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        android:text="You can monitor the gas concentration in each room and take appropriate actions."
-        android:textSize="21dp"
-        android:textColor="#0F4C75"
-        android:gravity="center_horizontal|top"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:text="Account"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:textColor="#3282B8"
+        android:gravity="right"
         />
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="80dp"
+        android:text="Add account to receive the notification from gas leak system in your house!"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:textColor="@color/dark"
+        android:gravity="center|center_vertical"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_intro"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_addMail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/txt_addMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textbox2"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="receiving_email@email.com"
+                android:textStyle="bold"
+                android:textColorHint="#FFFFFF"
+                android:textSize="20dp"
+                />
+            <Button
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:id="@+id/btn_addMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_addMail"
+                android:background="@drawable/layout_button"
+                app:backgroundTint="#3282B8"
+                android:text="Add"
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:textColor="#BBE1FA"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_listOfAccount"
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="List of account:"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="@color/dark"
+            android:gravity="left"
+            />
+
+        <ListView
+            android:layout_marginTop="15dp"
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:divider="#BBE1FA"
+            android:dividerHeight="20dp"
+            android:scrollbars="none" />
+
+    </LinearLayout>
+</RelativeLayout>
