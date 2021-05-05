@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.firealert.Adapter.HomeAdapter;
+import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -61,6 +62,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                     layoutAddroom.setVisibility(View.VISIBLE);
+                FragmentBottomSheet bottomsheet = new FragmentBottomSheet();
+                bottomsheet.show(getSupportFragmentManager(),"add_room");
             }
         });
 
