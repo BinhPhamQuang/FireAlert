@@ -30,6 +30,15 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        RelativeLayout rl_account = (RelativeLayout) findViewById(R.id.rl_account);
+        rl_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getApplicationContext(),AccountActivity.class);
+                startActivity(intent);
+            }
+        });
+
         RelativeLayout rl_about = (RelativeLayout) findViewById(R.id.rl_about);
         rl_about.setOnClickListener(new View.OnClickListener() {
             @Override

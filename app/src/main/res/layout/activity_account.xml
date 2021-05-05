@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+
+    tools:context=".AccountActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="#3282B8"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Your account"
+                    android:textStyle="bold"
+                    android:textSize="22dp"
+                    android:textColor="#BBE1FA"
+                    android:gravity="center"
+                    />
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginLeft="13dp"
+                    android:backgroundTint="#3282B8"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="0dp"
+                    app:srcCompat="@drawable/back"
+                    />
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appbar"
+            android:id="@+id/viewpager_account"/>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
