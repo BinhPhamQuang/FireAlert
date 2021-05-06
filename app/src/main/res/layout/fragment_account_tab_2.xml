@@ -9,32 +9,7 @@
     android:paddingLeft="40dp"
     android:paddingRight="40dp"
     >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
-        android:text="Information"
-        android:textStyle="bold"
-        android:textSize="22dp"
-        android:textColor="#3282B8"
-        android:gravity="left"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
-        android:text="Account"
-        android:textStyle="bold"
-        android:textSize="22dp"
-        android:textColor="#0F4C75"
-        android:gravity="right"
-        />
+
 
     <TextView
         android:id="@+id/tv_intro"
@@ -42,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="20dp"
         android:text="Add account to receive the notification from gas leak system in your house!"
         android:textStyle="bold"
         android:textSize="18dp"

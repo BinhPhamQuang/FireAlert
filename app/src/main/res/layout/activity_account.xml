@@ -49,11 +49,19 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-
-        <androidx.viewpager.widget.ViewPager
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/appbar"
+            android:background="@color/background"
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabTextColor="@color/dark" />
+        <androidx.viewpager.widget.ViewPager
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tab_layout"
             android:id="@+id/viewpager_account"/>
 
     </RelativeLayout>
