@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
 }
-
+apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -43,4 +43,9 @@ dependencies {
 //dot tab
     implementation 'com.tbuonomo:dotsindicator:4.2'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
+
+
+    //firebsae
+    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
 }
