@@ -133,7 +133,13 @@ public class HomeActivity extends AppCompatActivity {
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 if ( message.toString().equals("0")==false)
                 {
-                    startActivity(new Intent(HomeActivity.this,WarningActivity.class));
+                    Intent intent= new Intent(HomeActivity.this,WarningActivity.class);
+                    // change this value for send data to another activity
+                    intent.putExtra("room_name","Room 1");
+                    //--------------------------------------------
+                    intent.putExtra("value",message.toString());
+                    startActivity(intent);
+
                 }
             }
 
