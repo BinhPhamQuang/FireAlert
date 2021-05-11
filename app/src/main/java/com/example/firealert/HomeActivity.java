@@ -11,9 +11,16 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.firealert.Adapter.HomeAdapter;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
+import com.example.firealert.fragment_signup.MQTTService;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -25,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
     ImageButton btnAddRoom;
     View layoutAddroom;
     LinearLayout ll_close_layout;
-
+    MQTTService mqttService;
     private ArrayList<HashMap<String,String>> list;
     public static final String ROOM_NAME = "1";
     public static final String ROOM_GAS ="2";
@@ -104,6 +111,38 @@ public class HomeActivity extends AppCompatActivity {
                 HomeActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(HorizontalLayout);
         recyclerView.setAdapter(adapter);
+
+
+        try {
+            mqttService = new MQTTService(this);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+        mqttService.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+                Toast.makeText(getApplicationContext(),"Can not connect to server :(", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                if ( message.toString().equals("0")==false)
+                {
+                    startActivity(new Intent(HomeActivity.this,WarningActivity.class));
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+
     }
 
     public void AddItemsToRecyclerViewArrayList()
