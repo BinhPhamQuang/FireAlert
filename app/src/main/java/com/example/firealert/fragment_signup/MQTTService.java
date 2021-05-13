@@ -16,9 +16,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MQTTService {
     final String serverUri= "tcp://io.adafruit.com:1883";
     final String clientID="123456";
-    final String subscriptionTopic ="quangbinh/feeds/test";
-    final String username="quangbinh";
-    final String password="aio_grNV97RinHfoAC6LXFOOACyoU7PI";
+    final String subscriptionTopic ="biennguyenbk00/feeds/gas";
+    final String username="biennguyenbk00";
+    final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
     public MqttAndroidClient mqttAndroidClient;
     public MQTTService(Context context) throws MqttException {
         mqttAndroidClient = new MqttAndroidClient(context,serverUri,clientID);
