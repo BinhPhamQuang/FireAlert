@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 
 import com.example.firealert.Adapter.RoomDetailAdapter;
-import com.example.firealert.fragment_signup.MQTTService;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;

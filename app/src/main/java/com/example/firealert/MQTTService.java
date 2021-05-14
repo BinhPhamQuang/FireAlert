@@ -1,4 +1,4 @@
-package com.example.firealert.fragment_signup;
+package com.example.firealert;
 
 import android.content.Context;
 import android.util.Log;

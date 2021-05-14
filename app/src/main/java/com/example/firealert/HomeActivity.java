@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Adapter.HomeAdapter;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
-import com.example.firealert.fragment_signup.MQTTService;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -126,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void connectionLost(Throwable cause) {
-                Toast.makeText(getApplicationContext(),"Can not connect to server :(", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Can not connect to server :(", Toast.LENGTH_SHORT).show();
             }
 
             @Override

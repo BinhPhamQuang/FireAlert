@@ -5,9 +5,6 @@ import android.os.Bundle;
 
 import com.example.firealert.Adapter.ViewPageAdapter;
 import com.example.firealert.FragmentTips1;
-import com.example.firealert.fragment_signup.MQTTService;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +14,6 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
