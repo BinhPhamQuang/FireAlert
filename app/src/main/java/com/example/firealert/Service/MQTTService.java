@@ -1,4 +1,4 @@
-package com.example.firealert;
+package com.example.firealert.Service;
 
 import android.content.Context;
 import android.util.Log;

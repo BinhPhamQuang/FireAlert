@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.firealert.Adapter.ViewPageAdapter;
+import com.example.firealert.Service.MQTTService;
 import com.google.android.material.tabs.TabLayout;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;

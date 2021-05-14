@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.example.firealert.Adapter.ViewPageAdapter;
 import com.example.firealert.FragmentTips1;
+import com.example.firealert.Service.MQTTService;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import androidx.appcompat.app.AppCompatActivity;
