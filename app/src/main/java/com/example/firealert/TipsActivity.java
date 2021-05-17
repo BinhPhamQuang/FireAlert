@@ -46,12 +46,12 @@ public class TipsActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (viewPager.getCurrentItem()==0)
-                {
-                    startActivity(new Intent(TipsActivity.this,HomeActivity.class));
-                    finish();
-                }
-                else
+//                if (viewPager.getCurrentItem()==0)
+//                {
+//                    startActivity(new Intent(TipsActivity.this,HomeActivity.class));
+//                    finish();
+//                }
+                if (viewPager.getCurrentItem()!=0)
                 {
                     viewPager.setCurrentItem(viewPager.getCurrentItem()-1);
                 }
@@ -60,15 +60,15 @@ public class TipsActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (viewPager.getCurrentItem()!=2)
+                if (viewPager.getCurrentItem()!=7)
                 {
                     viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
                 }
-                else
-                {
-                    startActivity(new Intent(TipsActivity.this,HomeActivity.class));
-                    finish();
-                }
+//                else
+//                {
+//                    startActivity(new Intent(TipsActivity.this,HomeActivity.class));
+//                    finish();
+//                }
             }
         });
 
@@ -125,6 +125,13 @@ public class TipsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 viewPageAdapter.addFragment(FragmentTips1.getInstance(),"1");
+                viewPageAdapter.addFragment(FragmentTips2.getInstance(),"2");
+                viewPageAdapter.addFragment(FragmentTips3.getInstance(),"3");
+                viewPageAdapter.addFragment(FragmentTips4.getInstance(),"4");
+                viewPageAdapter.addFragment(FragmentTips5.getInstance(),"5");
+                viewPageAdapter.addFragment(FragmentTips6.getInstance(),"6");
+                viewPageAdapter.addFragment(FragmentTips7.getInstance(),"7");
+                viewPageAdapter.addFragment(FragmentTips8.getInstance(),"8");
                 viewPager.setAdapter(viewPageAdapter);
                 dotsIndicator.setViewPager(viewPager);
             }
