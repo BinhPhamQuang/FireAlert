@@ -13,6 +13,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.nio.charset.Charset;
+
 public class MQTTService {
     final String serverUri= "tcp://io.adafruit.com:1883";
     final String clientID="123456";
@@ -104,4 +106,20 @@ public class MQTTService {
             ex.printStackTrace();
         }
     }
+
+    public void sendDataMQTT(String data, String topic) {
+        MqttMessage msg = new MqttMessage();
+        msg.setId(123456);
+        msg.setQos(0);
+        msg.setRetained(true);
+        byte[] b = data.getBytes(Charset.forName("UTF-8"));
+        msg.setPayload(b);
+        Log.d("MQTT","Publish:"+ msg);
+        try {
+            this.mqttAndroidClient.publish(topic, msg);
+        } catch ( MqttException e) {
+            Log.d("MQTT","sendDataMQTT: cannot send message");
+        }
+    }
+
 }

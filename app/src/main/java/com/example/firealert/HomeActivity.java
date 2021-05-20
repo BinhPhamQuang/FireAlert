@@ -1,6 +1,7 @@
 package com.example.firealert;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +42,8 @@ public class HomeActivity extends AppCompatActivity {
     HomeAdapter adapter;
     LinearLayoutManager HorizontalLayout;
 
+    public static CardView badge;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,12 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        badge.setVisibility(View.INVISIBLE);
+
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null){
+            badge.setVisibility(extras.getInt("notification"));
+        }
 
         Date currentTime = Calendar.getInstance().getTime();
         String formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
@@ -130,8 +139,10 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if ( message.toString().equals("0")==false)
+                if (Float.parseFloat(message.toString()) >= 10)
                 {
+                    mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
+                    mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
                     Intent intent= new Intent(HomeActivity.this,WarningActivity.class);
                     // change this value for send data to another activity
                     intent.putExtra("room_name","Room 1");

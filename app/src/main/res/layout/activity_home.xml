@@ -29,6 +29,14 @@
             android:layout_height="45dp"
             app:srcCompat="@drawable/bell" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/badge"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            app:cardBackgroundColor="#AE1414"
+            app:cardCornerRadius="35dp" />
+
     </RelativeLayout>
 
     <RelativeLayout

@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Service.MQTTService;
+import com.example.firealert.fragment_bottom_sheet.Confirm;
+import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -42,17 +44,15 @@ public class WarningActivity extends AppCompatActivity {
         btn_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
-                finish();
+                Confirm confirm = new Confirm();
+                confirm.show(getSupportFragmentManager(),"activity_confirm");
             }
         });
 
         btn_fixitnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-                sendDataMQTT("240", "biennguyenbk00/feeds/output.drv");
-                sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
+                mqttService.sendDataMQTT("240", "biennguyenbk00/feeds/output.drv");
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -95,20 +95,5 @@ public class WarningActivity extends AppCompatActivity {
         String roomName= getIntent().getStringExtra("room_name");
         tv_nameRoom.setText(roomName);
         tv_valueGasConcentration.setText(value);
-    }
-
-    private void sendDataMQTT(String data, String topic) {
-        MqttMessage msg = new MqttMessage();
-        msg.setId(123456);
-        msg.setQos(0);
-        msg.setRetained(true);
-        byte[] b = data.getBytes(Charset.forName("UTF−8"));
-        msg.setPayload(b);
-        Log.d("MQTT","Publish:"+ msg);
-        try {
-            mqttService.mqttAndroidClient.publish(topic, msg);
-        } catch ( MqttException e) {
-            Log.d("MQTT","sendDataMQTT: cannot send message");
-        }
     }
 }

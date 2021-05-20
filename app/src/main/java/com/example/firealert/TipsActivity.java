@@ -101,7 +101,9 @@ public class TipsActivity extends AppCompatActivity {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if (message.toString().equals("0") == false) {
+                if (Float.parseFloat(message.toString()) >= 10) {
+                    mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
+                    mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
                     Intent intent = new Intent(TipsActivity.this, WarningActivity.class);
                     // change this value for send data to another activity
                     intent.putExtra("room_name", "Room 1");
