@@ -30,6 +30,7 @@ import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity {
     ImageButton btnAddRoom;
+    ImageButton btnNotification;
     View layoutAddroom;
     LinearLayout ll_close_layout;
     MQTTService mqttService;
@@ -43,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayoutManager HorizontalLayout;
 
     public static CardView badge;
+    public static String GasConcentration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         layoutAddroom = findViewById(R.id.lb_addroom);
         btnAddRoom = (ImageButton) findViewById(R.id.btnAddRoom);
+        btnNotification = (ImageButton) findViewById(R.id.btnNotification);
         ll_close_layout =findViewById(R.id.ll_close_layout);
         ll_close_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
                 layoutAddroom.setVisibility(View.INVISIBLE);
             }
         });
-
+        badge = findViewById(R.id.badge);
         badge.setVisibility(View.INVISIBLE);
 
         Bundle extras = getIntent().getExtras();
@@ -71,6 +74,21 @@ public class HomeActivity extends AppCompatActivity {
 
         TextView tv_currentDate = (TextView) findViewById(R.id.tv_currentDate);
         tv_currentDate.setText(splitDate[1]  + ", " + splitDate[2]);
+
+        btnNotification.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(badge.getVisibility()== View.INVISIBLE){
+                    Toast.makeText(getApplicationContext(),"No Notices Right Now!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
+                    intent.putExtra("room_name", "Room 1");
+                    intent.putExtra("value", GasConcentration);
+                    startActivity(intent);
+                }
+            }
+        });
 
 
         btnAddRoom.setOnClickListener(new View.OnClickListener() {
@@ -141,15 +159,22 @@ public class HomeActivity extends AppCompatActivity {
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 if (Float.parseFloat(message.toString()) >= 10)
                 {
-                    mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-                    mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
-                    Intent intent= new Intent(HomeActivity.this,WarningActivity.class);
-                    // change this value for send data to another activity
-                    intent.putExtra("room_name","Room 1");
-                    //--------------------------------------------
-                    intent.putExtra("value",message.toString());
-                    startActivity(intent);
-
+                    GasConcentration = message.toString();
+                    if(badge.getVisibility() == View.INVISIBLE) {
+//                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
+//                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
+                        mqttService.sendDataMQTT("60", "minhanhlhpx5/feeds/voice");
+                        mqttService.sendDataMQTT("ON", "minhanhlhpx5/feeds/bbc-led");
+                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
+                        // change this value for send data to another activity
+                        intent.putExtra("room_name", "Room 1");
+                        //--------------------------------------------
+                        intent.putExtra("value", message.toString());
+                        startActivity(intent);
+                    }
+                }
+                else{
+                    badge.setVisibility(View.INVISIBLE);
                 }
             }
 

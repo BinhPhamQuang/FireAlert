@@ -52,7 +52,8 @@ public class WarningActivity extends AppCompatActivity {
         btn_fixitnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mqttService.sendDataMQTT("240", "biennguyenbk00/feeds/output.drv");
+//                mqttService.sendDataMQTT("240", "biennguyenbk00/feeds/output.drv");
+                mqttService.sendDataMQTT("240", "minhanhlhpx5/feeds/fan");
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 startActivity(intent);
             }

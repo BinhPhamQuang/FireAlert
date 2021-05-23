@@ -62,15 +62,21 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 if (Float.parseFloat(message.toString()) >= 10) {
-                    mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-                    mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
-                    Intent intent = new Intent(AccountActivity.this, WarningActivity.class);
-                    // change this value for send data to another activity
-                    intent.putExtra("room_name", "Room 1");
-                    //--------------------------------------------
-                    intent.putExtra("value", message.toString());
-                    startActivity(intent);
-
+                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
+//                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
+//                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
+                        mqttService.sendDataMQTT("60", "minhanhlhpx5/feeds/voice");
+                        mqttService.sendDataMQTT("ON", "minhanhlhpx5/feeds/bbc-led");
+                        Intent intent = new Intent(AccountActivity.this, WarningActivity.class);
+                        // change this value for send data to another activity
+                        intent.putExtra("room_name", "Room 1");
+                        //--------------------------------------------
+                        intent.putExtra("value", message.toString());
+                        startActivity(intent);
+                    }
+                }
+                else {
+                    HomeActivity.badge.setVisibility(View.INVISIBLE);
                 }
             }
 

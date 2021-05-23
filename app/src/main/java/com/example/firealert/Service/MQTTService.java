@@ -18,9 +18,12 @@ import java.nio.charset.Charset;
 public class MQTTService {
     final String serverUri= "tcp://io.adafruit.com:1883";
     final String clientID="123456";
-    final String subscriptionTopic ="biennguyenbk00/feeds/gas";
-    final String username="biennguyenbk00";
-    final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
+    final String subscriptionTopic ="minhanhlhpx5/feeds/gas-concentration";
+    final String username="minhanhlhpx5";
+    final String password="aio_luee30ceekmTQiIGDRjAIf3RAxqw";
+//    final String subscriptionTopic ="biennguyenbk00/feeds/gas";
+//    final String username="biennguyenbk00";
+//    final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
     public MqttAndroidClient mqttAndroidClient;
     public MQTTService(Context context) throws MqttException {
         mqttAndroidClient = new MqttAndroidClient(context,serverUri,clientID);
