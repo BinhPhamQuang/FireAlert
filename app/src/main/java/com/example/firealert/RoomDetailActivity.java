@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.example.firealert.Adapter.HistoryDataAdapter;
 import com.example.firealert.Adapter.RoomDetailAdapter;
 import com.example.firealert.Service.MQTTService;
 
@@ -47,6 +49,17 @@ public class RoomDetailActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         RoomDetailAdapter adapter = new RoomDetailAdapter(this, list);
         listView.setAdapter(adapter);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent= new Intent(RoomDetailActivity.this,HistoryActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
 
         try {
