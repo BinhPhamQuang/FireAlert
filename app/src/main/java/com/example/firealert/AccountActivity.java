@@ -13,6 +13,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.firealert.Adapter.ViewPageAdapter;
 import com.example.firealert.Service.MQTTService;
+import com.example.firealert.fragment_account.FragmentAccountTab1;
+import com.example.firealert.fragment_account.FragmentAccountTab2;
 import com.google.android.material.tabs.TabLayout;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;

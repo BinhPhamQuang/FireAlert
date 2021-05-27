@@ -1,4 +1,4 @@
-package com.example.firealert;
+package com.example.firealert.fragment_tips;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,12 +13,12 @@ import androidx.fragment.app.Fragment;
 import com.example.firealert.R;
 
 
-public class FragmentTips4 extends Fragment {
+public class FragmentTips6 extends Fragment {
 
-    public  static FragmentTips4 getInstance()
+    public  static FragmentTips6 getInstance()
     {
-        FragmentTips4 fragmentTips4= new FragmentTips4();
-        return fragmentTips4;
+        FragmentTips6 fragmentTips6= new FragmentTips6();
+        return fragmentTips6;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FragmentTips4 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_tips4,container,false);
+        View view= inflater.inflate(R.layout.fragment_tips6,container,false);
         return view;
     }
 }
