@@ -1,11 +1,13 @@
 package com.example.firealert;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Adapter.HomeAdapter;
+import com.example.firealert.DAO.FireBaseHelper;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
 
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     ImageButton btnAddRoom;
@@ -155,21 +159,24 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Can not connect to server :(", Toast.LENGTH_SHORT).show();
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 if (Float.parseFloat(message.toString()) >= 10)
                 {
                     GasConcentration = message.toString();
                     if(badge.getVisibility() == View.INVISIBLE) {
-//                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-//                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
-                        mqttService.sendDataMQTT("60", "minhanhlhpx5/feeds/voice");
-                        mqttService.sendDataMQTT("ON", "minhanhlhpx5/feeds/bbc-led");
+                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
+                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
+
+
                         Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
                         // change this value for send data to another activity
                         intent.putExtra("room_name", "Room 1");
                         //--------------------------------------------
                         intent.putExtra("value", message.toString());
+                        // must change this value by room_id
+                        intent.putExtra("room_id",11);
                         startActivity(intent);
                     }
                 }

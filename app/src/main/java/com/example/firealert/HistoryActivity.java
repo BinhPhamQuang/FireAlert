@@ -1,9 +1,11 @@
 package com.example.firealert;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +34,7 @@ public class HistoryActivity extends AppCompatActivity {
     private int room_id;
     FirebaseDatabase firebaseDatabase= FirebaseDatabase.getInstance();
     DatabaseReference reff;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +54,17 @@ public class HistoryActivity extends AppCompatActivity {
         // must remove this line for release mode
         room_id=11;
         //------------------------
-
+//        FireBaseHelper.getInstance().sendHistoryData(room_id, 0, new FireBaseHelper.DataStatus() {
+//            @Override
+//            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
+//
+//            }
+//
+//            @Override
+//            public void dataIsSent() {
+//
+//            }
+//        });
         FireBaseHelper.getInstance().getHistory(User.getInstance().getHouse_id(), room_id, new FireBaseHelper.DataStatus() {
             @Override
             public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
@@ -71,7 +84,14 @@ public class HistoryActivity extends AppCompatActivity {
 
                 lv_historydata.setAdapter((historyDataAdapter));
             }
+
+            @Override
+            public void dataIsSent() {
+
+            }
         });
+
+
         historyDataAdapter= new HistoryDataAdapter(this,list);
         //lv_historydata.setAdapter(historyDataAdapter);
     }
