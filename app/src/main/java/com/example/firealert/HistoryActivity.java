@@ -18,11 +18,13 @@ public class HistoryActivity extends AppCompatActivity {
     private ArrayList<HashMap<String,String>> list;
     private HistoryDataAdapter historyDataAdapter;
     private ListView lv_historydata;
+    private int room_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         list = new ArrayList<HashMap<String, String>>();
+        room_id= getIntent().getIntExtra("room_id",-1);
         createSample();
 
 
@@ -33,13 +35,7 @@ public class HistoryActivity extends AppCompatActivity {
         Log.e("hihihi",historyDataAdapter.getCount()+"");
         lv_historydata.setAdapter(historyDataAdapter);
 
-//        btnBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //onBackPressed();
-//                //finish();
-//            }
-//        });
+
     }
 
     private void createSample()
