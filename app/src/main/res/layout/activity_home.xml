@@ -71,7 +71,7 @@
             android:layout_marginTop="10dp"
             android:layout_below="@id/tv_currentDate"
             android:textStyle="bold"
-            android:textSize="35dp"
+            android:textSize="33dp"
             android:textColor="#0F4C75"
             android:gravity="top"
             />

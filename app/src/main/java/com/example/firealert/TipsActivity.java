@@ -4,8 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.firealert.Adapter.ViewPageAdapter;
-import com.example.firealert.FragmentTips1;
+import com.example.firealert.fragment_tips.FragmentTips1;
 import com.example.firealert.Service.MQTTService;
+import com.example.firealert.fragment_tips.FragmentTips2;
+import com.example.firealert.fragment_tips.FragmentTips3;
+import com.example.firealert.fragment_tips.FragmentTips4;
+import com.example.firealert.fragment_tips.FragmentTips5;
+import com.example.firealert.fragment_tips.FragmentTips6;
+import com.example.firealert.fragment_tips.FragmentTips7;
+import com.example.firealert.fragment_tips.FragmentTips8;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import androidx.appcompat.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package com.example.firealert;
+package com.example.firealert.fragment_account;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.firealert.Adapter.AccountTab2Adapter;
+import com.example.firealert.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
