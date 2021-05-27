@@ -1,5 +1,6 @@
 package com.example.firealert;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.Image;
@@ -8,8 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.firealert.Adapter.HistoryDataAdapter;
+import com.example.firealert.DTO.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,25 +27,63 @@ public class HistoryActivity extends AppCompatActivity {
     private HistoryDataAdapter historyDataAdapter;
     private ListView lv_historydata;
     private int room_id;
+    FirebaseDatabase firebaseDatabase= FirebaseDatabase.getInstance();
+    DatabaseReference reff;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+
+
         list = new ArrayList<HashMap<String, String>>();
         room_id= getIntent().getIntExtra("room_id",-1);
-        createSample();
+        reff= firebaseDatabase.getReference();
 
-
+        getDataHistory();
         ImageButton btnBack= findViewById(R.id.btnBack);
-
         lv_historydata=findViewById(R.id.lv_historydata);
         historyDataAdapter= new HistoryDataAdapter(this,list);
-        Log.e("hihihi",historyDataAdapter.getCount()+"");
-        lv_historydata.setAdapter(historyDataAdapter);
-
-
+        //lv_historydata.setAdapter(historyDataAdapter);
     }
+    private void getDataHistory()
+    {
 
+        int home_id= User.getInstance().getHouse_id();
+        reff= reff.child("History");
+        reff.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                list.clear();
+                for (DataSnapshot dss:snapshot.getChildren())
+                {
+                    // must remove this line in release mode
+                    room_id=11;
+                    //------------------
+                    if (dss.child("house_id").getValue().toString().equals(home_id+"") && dss.child("room_id").getValue().toString().equals(room_id+"")  )
+                    {
+                        HashMap<String,String> hashMap = new HashMap<String,String>();
+                        String dates= dss.child("date").getValue().toString();
+                        String value= dss.child("value").getValue().toString();
+                        hashMap.put(historyDataAdapter.DATE,dates);
+                        hashMap.put(historyDataAdapter.VALUE,value);
+                        list.add(hashMap);
+                    }
+                }
+                lv_historydata.setAdapter(historyDataAdapter);
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     private void createSample()
     {
         HashMap<String,String> hashMap1 = new HashMap<String,String>();
