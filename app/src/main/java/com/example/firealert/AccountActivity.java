@@ -67,8 +67,8 @@ public class AccountActivity extends AppCompatActivity {
                     if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
 //                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
 //                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
-                        mqttService.sendDataMQTT("60", "minhanhlhpx5/feeds/voice");
-                        mqttService.sendDataMQTT("ON", "minhanhlhpx5/feeds/bbc-led");
+                        mqttService.sendDataMQTT(mqttService.SPEAKER, "biennguyenbk00/feeds/output.buzzer");
+                        mqttService.sendDataMQTT(mqttService.LED, "biennguyenbk00/feeds/output.led");
                         Intent intent = new Intent(AccountActivity.this, WarningActivity.class);
                         // change this value for send data to another activity
                         intent.putExtra("room_name", "Room 1");

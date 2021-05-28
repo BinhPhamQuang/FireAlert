@@ -24,6 +24,11 @@ public class MQTTService {
     final String subscriptionTopic ="biennguyenbk00/feeds/gas";
     final String username="biennguyenbk00";
     final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
+
+    public final String LED = "[\"id\":\"1\",\"name\":\"LED\",\"data\":\"1\",\"unit\":\"\"]";
+    public final String SPEAKER = "[\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"1000\",\"unit\":\"\"]";
+    public final String DRV_PWM = "[\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"240\",\"unit\":\"\"]";
+
     public MqttAndroidClient mqttAndroidClient;
     public MQTTService(Context context) throws MqttException {
         mqttAndroidClient = new MqttAndroidClient(context,serverUri,clientID);

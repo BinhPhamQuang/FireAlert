@@ -166,8 +166,8 @@ public class HomeActivity extends AppCompatActivity {
                 {
                     GasConcentration = message.toString();
                     if(badge.getVisibility() == View.INVISIBLE) {
-                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
+                        mqttService.sendDataMQTT(mqttService.SPEAKER, "biennguyenbk00/feeds/output.buzzer");
+                        mqttService.sendDataMQTT(mqttService.LED, "biennguyenbk00/feeds/output.led");
 
 
                         Intent intent = new Intent(HomeActivity.this, WarningActivity.class);

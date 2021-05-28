@@ -36,13 +36,11 @@ public class WarningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_warning);
-
-
         btn_ignore= findViewById(R.id.btn_ignore);
         btn_fixitnow= findViewById(R.id.btn_fixitnow);
         tv_nameRoom= findViewById(R.id.tv_nameRoom);
         tv_valueGasConcentration= findViewById(R.id.tv_valueGasConcentration);
-
+        HomeActivity.badge.setVisibility(View.INVISIBLE);
         btn_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +52,7 @@ public class WarningActivity extends AppCompatActivity {
         btn_fixitnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mqttService.sendDataMQTT("240", "biennguyenbk00/feeds/output.drv");
+                mqttService.sendDataMQTT(mqttService.DRV_PWM, "biennguyenbk00/feeds/output.drv");
 //                mqttService.sendDataMQTT("240", "minhanhlhpx5/feeds/fan");
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 startActivity(intent);
