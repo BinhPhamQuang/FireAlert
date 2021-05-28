@@ -134,6 +134,9 @@ public class HomeActivity extends AppCompatActivity {
 
         //__ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+
+        
+
         RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(RecyclerViewLayoutManager);
         AddItemsToRecyclerViewArrayList();
