@@ -32,6 +32,7 @@ public class WarningActivity extends AppCompatActivity {
     TextView tv_nameRoom;
     TextView tv_valueGasConcentration;
     MQTTService mqttService;
+    int indexTopic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,7 @@ public class WarningActivity extends AppCompatActivity {
         tv_nameRoom= findViewById(R.id.tv_nameRoom);
         tv_valueGasConcentration= findViewById(R.id.tv_valueGasConcentration);
         HomeActivity.badge.setVisibility(View.INVISIBLE);
+        indexTopic = getIntent().getIntExtra("indexTopic",0);
         btn_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +54,7 @@ public class WarningActivity extends AppCompatActivity {
         btn_fixitnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mqttService.sendDataMQTT(mqttService.DRV_PWM, "biennguyenbk00/feeds/output.drv");
+                mqttService.sendDataMQTT(mqttService.DRV_PWM, mqttService.drvTopic[indexTopic]);
 //                mqttService.sendDataMQTT("240", "minhanhlhpx5/feeds/fan");
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 startActivity(intent);
@@ -95,7 +97,7 @@ public class WarningActivity extends AppCompatActivity {
     {
         String value= getIntent().getStringExtra("value");
         String roomName= getIntent().getStringExtra("room_name");
-        int room_id= getIntent().getIntExtra("room_id",0);
+        int room_id = indexTopic;
         tv_nameRoom.setText(roomName);
         tv_valueGasConcentration.setText(value);
         FireBaseHelper.getInstance().sendHistoryData(room_id, Float.parseFloat(value), new FireBaseHelper.DataStatus() {

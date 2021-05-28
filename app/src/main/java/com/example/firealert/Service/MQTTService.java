@@ -21,13 +21,23 @@ public class MQTTService {
 //    final String subscriptionTopic ="minhanhlhpx5/feeds/gas-concentration";
 //    final String username="minhanhlhpx5";
 //    final String password="aio_luee30ceekmTQiIGDRjAIf3RAxqw";
-    final String subscriptionTopic ="biennguyenbk00/feeds/gas";
     final String username="biennguyenbk00";
     final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
 
-    public final String LED = "[\"id\":\"1\",\"name\":\"LED\",\"data\":\"1\",\"unit\":\"\"]";
-    public final String SPEAKER = "[\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"1000\",\"unit\":\"\"]";
-    public final String DRV_PWM = "[\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"240\",\"unit\":\"\"]";
+    public final String[] gasTopic ={"biennguyenbk00/feeds/gas","biennguyenbk00/feeds/gas2"};
+    public final String[] drvTopic ={"biennguyenbk00/feeds/output.drv","biennguyenbk00/feeds/output.drv2"};
+    public final String[] ledTopic ={"biennguyenbk00/feeds/output.led","biennguyenbk00/feeds/output.led2"};
+    public final String[] buzzerTopic ={"biennguyenbk00/feeds/output.buzzer","biennguyenbk00/feeds/output.buzzer2"};
+
+    public final String[] rooms ={"Living room","Kitchen"};
+
+
+    public final String LED         = "[\"id\":\"1\",\"name\":\"LED\",\"data\":\"1\",\"unit\":\"\"]";
+    public final String LED_OFF     = "[\"id\":\"1\",\"name\":\"LED\",\"data\":\"2\",\"unit\":\"\"]";
+    public final String SPEAKER     = "[\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"1000\",\"unit\":\"\"]";
+    public final String SPEAKER_OFF = "[\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"0\",\"unit\":\"\"]";
+    public final String DRV_PWM     = "[\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"240\",\"unit\":\"\"]";
+    public final String DRV_PWM_OFF = "[\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"0\",\"unit\":\"\"]";
 
     public MqttAndroidClient mqttAndroidClient;
     public MQTTService(Context context) throws MqttException {
@@ -78,7 +88,7 @@ public class MQTTService {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-                    subscribeToTopic();
+                    for (String topic: gasTopic) { subscribeToTopic(topic); }
                 }
 
                 @Override
@@ -93,10 +103,10 @@ public class MQTTService {
             ex.printStackTrace();
         }
     }
-    private  void subscribeToTopic()
+    private  void subscribeToTopic(String topic)
     {
         try {
-            mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
+            mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.w("Mqtt","Subscribed !");

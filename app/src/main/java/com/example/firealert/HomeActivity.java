@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -162,26 +163,41 @@ public class HomeActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
+                int indexTopic = 0;
+                for (int i = 0; i < mqttService.gasTopic.length; i++) {
+                    if (mqttService.gasTopic[i].equals(topic)) {
+                        indexTopic = i;
+                    }
+                }
                 if (Float.parseFloat(message.toString()) >= 10)
                 {
+                    Log.d("Message Arrived: ", topic);
                     GasConcentration = message.toString();
                     if(badge.getVisibility() == View.INVISIBLE) {
-                        mqttService.sendDataMQTT(mqttService.SPEAKER, "biennguyenbk00/feeds/output.buzzer");
-                        mqttService.sendDataMQTT(mqttService.LED, "biennguyenbk00/feeds/output.led");
+                        mqttService.sendDataMQTT(mqttService.SPEAKER, mqttService.buzzerTopic[indexTopic]);
+                        mqttService.sendDataMQTT(mqttService.LED, mqttService.ledTopic[indexTopic]);
 
 
                         Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
                         // change this value for send data to another activity
-                        intent.putExtra("room_name", "Room 1");
+                        intent.putExtra("room_name", mqttService.rooms[indexTopic]);
                         //--------------------------------------------
                         intent.putExtra("value", message.toString());
                         // must change this value by room_id
-                        intent.putExtra("room_id",11);
+                        intent.putExtra("indexTopic",indexTopic);
                         startActivity(intent);
                     }
                 }
-                else{
+                else if (Float.parseFloat(message.toString()) >= 2){
                     badge.setVisibility(View.INVISIBLE);
+                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
+                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
+                }
+                else {
+                    badge.setVisibility(View.INVISIBLE);
+                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
+                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
+                    mqttService.sendDataMQTT(mqttService.DRV_PWM_OFF, mqttService.drvTopic[indexTopic]);
                 }
             }
 

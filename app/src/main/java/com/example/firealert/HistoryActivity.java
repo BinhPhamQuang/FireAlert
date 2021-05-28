@@ -94,6 +94,14 @@ public class HistoryActivity extends AppCompatActivity {
 
         historyDataAdapter= new HistoryDataAdapter(this,list);
         //lv_historydata.setAdapter(historyDataAdapter);
+
+        ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
 
