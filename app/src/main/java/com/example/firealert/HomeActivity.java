@@ -156,7 +156,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void connectionLost(Throwable cause) {
-                Toast.makeText(getApplicationContext(),"Can not connect to server :(", Toast.LENGTH_SHORT).show();
+
             }
 
             @RequiresApi(api = Build.VERSION_CODES.O)

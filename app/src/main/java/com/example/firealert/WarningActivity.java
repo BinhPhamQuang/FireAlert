@@ -77,7 +77,7 @@ public class WarningActivity extends AppCompatActivity {
 
             @Override
             public void connectionLost(Throwable cause) {
-                Toast.makeText(getApplicationContext(), "Can not connect to server :(", Toast.LENGTH_LONG).show();
+
             }
 
             @Override
