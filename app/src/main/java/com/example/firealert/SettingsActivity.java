@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Service.MQTTService;
@@ -21,12 +22,24 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 
 public class SettingsActivity extends AppCompatActivity {
+    TextView helloTextView;
     MQTTService mqttService;
+    Long userId;
+    String email, address, phone, username, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        helloTextView = (TextView) findViewById(R.id.txtview_hello);
+
+        username = getIntent().getStringExtra("username");
+        userId = getIntent().getLongExtra("user_id", 0);
+        email = getIntent().getStringExtra("email");
+        address = getIntent().getStringExtra("address");
+        phone = getIntent().getStringExtra("phone");
+        password = getIntent().getStringExtra("password");
+        helloTextView.setText("Hello " + username + "!");
 
         ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +54,9 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),AccountActivity.class);
+                intent.putExtra("address", address);
+                intent.putExtra("phone", phone);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -59,6 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),PrivacyActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });

@@ -54,6 +54,7 @@
         android:background="@drawable/avatar"
         />
     <TextView
+        android:id="@+id/txt_view"
         android:layout_width="209dp"
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"

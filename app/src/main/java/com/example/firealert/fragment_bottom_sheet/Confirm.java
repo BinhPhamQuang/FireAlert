@@ -40,6 +40,7 @@ public class Confirm extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(),HomeActivity.class);
                 intent.putExtra("notification", View.VISIBLE);
+                intent.putExtra("Class", "Confirm");
                 startActivity(intent);
                 onDestroyView();
             }

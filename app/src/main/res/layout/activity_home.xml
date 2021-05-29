@@ -6,193 +6,193 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context=".HomeActivity">
-<RelativeLayout
-    android:padding="0dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
     <RelativeLayout
-        android:padding="10dp"
-        android:id="@+id/top_bar"
+        android:padding="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <TextView
-            android:id="@+id/tv_welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Welcome Binh !"
-            android:textStyle="bold"
-            android:textSize="24dp"
-            android:textColor="#0F4C75"
-            android:gravity="top"
-            />
-
-        <ImageButton
-            android:id="@+id/btnNotification"
-            android:background="@color/background"
-            android:layout_alignParentRight="true"
-            android:scaleType="fitCenter"
-
-            android:layout_width="35dp"
-            android:layout_height="45dp"
-            app:srcCompat="@drawable/bell" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/badge"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentRight="true"
-            app:cardBackgroundColor="#AE1414"
-            app:cardCornerRadius="35dp" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-
-        android:layout_below="@id/top_bar"
-        android:id="@+id/rl_layout"
-
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/layout_button"
-        android:backgroundTint="@color/button_color">
+        >
         <RelativeLayout
             android:padding="10dp"
+            android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-            <TextView
-                android:id="@+id/tv_currentDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="September 30, 2022"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textColor="#BBE1FA"
-                android:gravity="left|center_vertical"
-                />
 
-            <DigitalClock
-                android:id="@+id/dc_currentTime"
+            <TextView
+                android:id="@+id/tv_welcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="Welcome Binh !"
                 android:textStyle="bold"
-                android:textSize="45dp"
+                android:textSize="24dp"
                 android:textColor="#0F4C75"
                 android:gravity="top"
                 />
-            <TextView
-                android:id="@+id/tv_status"
+
+            <ImageButton
+                android:id="@+id/btnNotification"
+                android:background="@color/background"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitCenter"
+
+                android:layout_width="35dp"
+                android:layout_height="45dp"
+                app:srcCompat="@drawable/bell" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/badge"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                app:cardBackgroundColor="#AE1414"
+                app:cardCornerRadius="35dp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+
+            android:layout_below="@id/top_bar"
+            android:id="@+id/rl_layout"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/layout_button"
+            android:backgroundTint="@color/button_color">
+            <RelativeLayout
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/tv_currentDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="September 30, 2022"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:textColor="#BBE1FA"
+                    android:gravity="left|center_vertical"
+                    />
+
+                <DigitalClock
+                    android:id="@+id/dc_currentTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textStyle="bold"
+                    android:textSize="45dp"
+                    android:textColor="#0F4C75"
+                    android:gravity="top"
+                    />
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Secured !"
+                    android:textSize="25dp"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="bold"
+                    android:layout_below="@id/tv_currentDate"
+                    />
+
+            </RelativeLayout
+                >
+
+
+
+
+
+
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_below="@+id/rl_layout"
+            android:id="@+id/label2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/background"
+            android:layout_marginBottom="15dp"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:padding="10dp"
+                android:id="@+id/recyclerView"
+                android:scrollbars="none"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Secured !"
-                android:textSize="25dp"
-                android:textColor="@color/teal_700"
-                android:textStyle="bold"
-                android:layout_below="@id/tv_currentDate"
-                />
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 
-        </RelativeLayout
-            >
+        <TableLayout
+            android:layout_below="@id/label2"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
 
-
-
-
-
-
-    </LinearLayout>
-    <RelativeLayout
-        android:layout_below="@+id/rl_layout"
-        android:id="@+id/label2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@color/background"
-        android:layout_marginBottom="15dp"
-        >
-        <androidx.recyclerview.widget.RecyclerView
-           android:padding="10dp"
-            android:id="@+id/recyclerView"
-            android:scrollbars="none"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            >
+            <TableRow android:gravity="center" android:layout_marginBottom="10dp" >
+                <ImageButton
+                    android:id="@+id/btnAddRoom"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/layout_button"
+                    android:backgroundTint="@color/button_color"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="fitCenter"
+                    android:layout_width="188dp"
+                    android:layout_height="175dp"
+                    android:adjustViewBounds="true"
+                    android:padding="40dp"
+                    app:srcCompat="@drawable/insert_dark" />
+                <ImageButton
+                    android:id="@+id/btnSettings"
+                    android:background="@drawable/layout_button"
+                    android:backgroundTint="@color/button_color"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="fitCenter"
+                    android:layout_width="188dp"
+                    android:layout_height="175dp"
+                    android:adjustViewBounds="true"
+                    android:padding="40dp"
+                    app:srcCompat="@drawable/settings_dark" />
+            </TableRow>
+            <TableRow android:gravity="center">
+                <ImageButton
+                    android:id="@+id/btnTips"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/layout_button"
+                    android:backgroundTint="@color/button_color"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="fitCenter"
+                    android:layout_width="188dp"
+                    android:layout_height="175dp"
+                    android:adjustViewBounds="true"
+                    android:padding="40dp"
+                    app:srcCompat="@drawable/tips" />
+                <ImageButton
+                    android:id="@+id/btnRoomDetail"
+                    android:background="@drawable/layout_button"
+                    android:backgroundTint="@color/button_color"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="fitCenter"
+                    android:layout_width="188dp"
+                    android:layout_height="175dp"
+                    android:adjustViewBounds="true"
+                    android:padding="40dp"
+                    app:srcCompat="@drawable/details_dark" />
+            </TableRow>
+        </TableLayout>
+        <include android:id="@+id/lb_addroom"  layout="@layout/add_room"
+            android:layout_alignParentBottom="true"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:translationZ="90dp"
+            android:layout_width="match_parent" />
+
     </RelativeLayout>
-
-    <TableLayout
-        android:layout_below="@id/label2"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <TableRow android:gravity="center" android:layout_marginBottom="10dp" >
-            <ImageButton
-                android:id="@+id/btnAddRoom"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/layout_button"
-                android:backgroundTint="@color/button_color"
-                android:layout_alignParentRight="true"
-                android:scaleType="fitCenter"
-                android:layout_width="188dp"
-                android:layout_height="175dp"
-                android:adjustViewBounds="true"
-                android:padding="40dp"
-                app:srcCompat="@drawable/insert_dark" />
-            <ImageButton
-                android:id="@+id/btnSettings"
-                android:background="@drawable/layout_button"
-                android:backgroundTint="@color/button_color"
-                android:layout_alignParentRight="true"
-                android:scaleType="fitCenter"
-                android:layout_width="188dp"
-                android:layout_height="175dp"
-                android:adjustViewBounds="true"
-                android:padding="40dp"
-                app:srcCompat="@drawable/settings_dark" />
-        </TableRow>
-        <TableRow android:gravity="center">
-            <ImageButton
-                android:id="@+id/btnTips"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/layout_button"
-                android:backgroundTint="@color/button_color"
-                android:layout_alignParentRight="true"
-                android:scaleType="fitCenter"
-                android:layout_width="188dp"
-                android:layout_height="175dp"
-                android:adjustViewBounds="true"
-                android:padding="40dp"
-                app:srcCompat="@drawable/tips" />
-            <ImageButton
-                android:id="@+id/btnRoomDetail"
-                android:background="@drawable/layout_button"
-                android:backgroundTint="@color/button_color"
-                android:layout_alignParentRight="true"
-                android:scaleType="fitCenter"
-                android:layout_width="188dp"
-                android:layout_height="175dp"
-                android:adjustViewBounds="true"
-                android:padding="40dp"
-                app:srcCompat="@drawable/details_dark" />
-        </TableRow>
-    </TableLayout>
-    <include android:id="@+id/lb_addroom"  layout="@layout/add_room"
-        android:layout_alignParentBottom="true"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:translationZ="90dp"
-        android:layout_width="match_parent" />
-
-</RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

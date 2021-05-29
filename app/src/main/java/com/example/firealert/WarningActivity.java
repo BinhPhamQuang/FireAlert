@@ -33,6 +33,7 @@ public class WarningActivity extends AppCompatActivity {
     TextView tv_valueGasConcentration;
     MQTTService mqttService;
     int indexTopic;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class WarningActivity extends AppCompatActivity {
                 mqttService.sendDataMQTT(mqttService.DRV_PWM, mqttService.drvTopic[indexTopic]);
 //                mqttService.sendDataMQTT("240", "minhanhlhpx5/feeds/fan");
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
+                intent.putExtra("Class", "WarningActivity");
                 startActivity(intent);
             }
         });

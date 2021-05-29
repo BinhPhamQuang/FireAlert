@@ -28,6 +28,7 @@ public class AccountActivity extends AppCompatActivity {
     ViewPageAdapter viewPageAdapter;
     TabLayout tab_layout;
     MQTTService mqttService;
+    String address, phone, username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,11 @@ public class AccountActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.viewpager_account);
         tab_layout= findViewById(R.id.tab_layout);
+
+        address = getIntent().getStringExtra("address");
+        phone = getIntent().getStringExtra("phone");
+        username = getIntent().getStringExtra("username");
+
         getTab();
 
         btn_back = (ImageButton) findViewById(R.id.btn_back);
@@ -94,7 +100,7 @@ public class AccountActivity extends AppCompatActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                viewPageAdapter.addFragment(FragmentAccountTab1.getInstance(),"Information");
+                viewPageAdapter.addFragment(FragmentAccountTab1.getInstance(username, phone, address),"Information");
                 viewPageAdapter.addFragment(FragmentAccountTab2.getInstance(),"Account");
                 viewPager.setAdapter(viewPageAdapter);
                 tab_layout.setupWithViewPager(viewPager);

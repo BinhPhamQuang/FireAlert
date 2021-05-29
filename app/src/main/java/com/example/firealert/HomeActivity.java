@@ -39,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     View layoutAddroom;
     LinearLayout ll_close_layout;
     MQTTService mqttService;
+    TextView textView;
     private ArrayList<HashMap<String,String>> list;
     public static final String ROOM_NAME = "1";
     public static final String ROOM_GAS ="2";
@@ -50,6 +51,8 @@ public class HomeActivity extends AppCompatActivity {
 
     public static CardView badge;
     public static String GasConcentration;
+    Long userId;
+    String email, address, phone, username, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         layoutAddroom = findViewById(R.id.lb_addroom);
         btnAddRoom = (ImageButton) findViewById(R.id.btnAddRoom);
+        textView = (TextView) findViewById(R.id.tv_welcome);
+
         btnNotification = (ImageButton) findViewById(R.id.btnNotification);
         ll_close_layout =findViewById(R.id.ll_close_layout);
         ll_close_layout.setOnClickListener(new View.OnClickListener() {
@@ -68,10 +73,22 @@ public class HomeActivity extends AppCompatActivity {
         badge = findViewById(R.id.badge);
         badge.setVisibility(View.INVISIBLE);
 
-        Bundle extras = getIntent().getExtras();
-        if(extras!=null){
-            badge.setVisibility(extras.getInt("notification"));
+        String className = getIntent().getStringExtra("Class");
+        if(className.equals("Confirm")) {
+            int extra = getIntent().getIntExtra("notification", 1);
+            badge.setVisibility(extra);
+        } else if (className.equals("LoginActivity")) {
+            userId = getIntent().getLongExtra("user_id", 0);
+            email = getIntent().getStringExtra("email");
+            address = getIntent().getStringExtra("address");
+            phone = getIntent().getStringExtra("phone");
+            username = getIntent().getStringExtra("username");
+            password = getIntent().getStringExtra("password");
+            textView.setText("Welcome " + username + " !");
+        } else {
+
         }
+
 
         Date currentTime = Calendar.getInstance().getTime();
         String formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
@@ -110,6 +127,12 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),SettingsActivity.class);
+                intent.putExtra("user_id", userId);
+                intent.putExtra("email", email);
+                intent.putExtra("address", address);
+                intent.putExtra("phone", phone);
+                intent.putExtra("username", username);
+                intent.putExtra("password", password);
                 startActivity(intent);
             }
         });
@@ -135,7 +158,7 @@ public class HomeActivity extends AppCompatActivity {
         //__ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
 
-        
+
 
         RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(RecyclerViewLayoutManager);

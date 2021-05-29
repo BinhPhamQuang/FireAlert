@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Service.MQTTService;
@@ -19,11 +20,17 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class PrivacyActivity extends AppCompatActivity {
     MQTTService mqttService;
+    String username;
+    TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privacy);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        textView = findViewById(R.id.txt_view);
+
+        username = getIntent().getStringExtra("username");
+        textView.setText("Hello " + username + "!");
 
         ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
