@@ -3,6 +3,7 @@ package com.example.firealert;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -13,7 +14,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.firealert.DTO.UserData;
 import com.example.firealert.Service.MQTTService;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -23,9 +32,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class SettingsActivity extends AppCompatActivity {
     TextView helloTextView;
+    Button btnSignOut;
     MQTTService mqttService;
-    String userId;
-    String email, address, phone, username, password;
+    private String address, phone, username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +43,9 @@ public class SettingsActivity extends AppCompatActivity {
         helloTextView = (TextView) findViewById(R.id.txtview_hello);
 
         username = getIntent().getStringExtra("username");
-        userId = getIntent().getStringExtra("user_id");
-        email = getIntent().getStringExtra("email");
-        address = getIntent().getStringExtra("address");
         phone = getIntent().getStringExtra("phone");
-        password = getIntent().getStringExtra("password");
-        helloTextView.setText("Hello " + username + "!");
+        address = getIntent().getStringExtra("address");
+        helloTextView.setText(String.format("Hello %s!", username));
 
         ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -80,12 +86,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        Button btn_signOut = (Button) findViewById(R.id.btn_signOut);
-        btn_signOut.setOnClickListener(new View.OnClickListener() {
+        Button btnSignOut = findViewById(R.id.btn_signOut);
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(intent);
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
             }
         });
 

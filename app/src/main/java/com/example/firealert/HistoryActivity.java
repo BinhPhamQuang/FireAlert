@@ -31,7 +31,7 @@ public class HistoryActivity extends AppCompatActivity {
     private ArrayList<HashMap<String,String>> list;
     private HistoryDataAdapter historyDataAdapter;
     private ListView lv_historydata;
-    private int room_id;
+    private String room_id;
     FirebaseDatabase firebaseDatabase= FirebaseDatabase.getInstance();
     DatabaseReference reff;
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -43,7 +43,7 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         list = new ArrayList<HashMap<String, String>>();
-        room_id= getIntent().getIntExtra("room_id",-1);
+        room_id= getIntent().getStringExtra("room_id");
         reff= firebaseDatabase.getReference();
 
 
@@ -52,7 +52,7 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         // must remove this line for release mode
-        room_id=11;
+        room_id="11";
         //------------------------
 //        FireBaseHelper.getInstance().sendHistoryData(room_id, 0, new FireBaseHelper.DataStatus() {
 //            @Override

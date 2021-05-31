@@ -71,7 +71,6 @@ public class SignUpActivity extends AppCompatActivity {
                                         HashMap<String, String> userInformation = new HashMap<>();
                                         userInformation.put("user_id", user.getUid());
                                         userInformation.put("email", emailSignup);
-                                        userInformation.put("password", passwordSignup);
                                         userInformation.put("username", yourNameSignup);
                                         userInformation.put("address", addressSignup);
                                         userInformation.put("phone", phoneNumberSignup);

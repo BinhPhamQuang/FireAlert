@@ -37,7 +37,7 @@ public class FireBaseHelper {
         FireBaseHelper fireBaseHelper= new FireBaseHelper();
         return  fireBaseHelper;
     }
-    public void getHistory(int house_id,int room_id,final DataStatus dataStatus)
+    public void getHistory(String house_id,String room_id,final DataStatus dataStatus)
     {
         List<History> histories= new ArrayList<>();
         rff=  firebaseDatabase.getReference("History");
@@ -51,7 +51,7 @@ public class FireBaseHelper {
                 {
                     keys.add(dss.getKey());
                     History history= dss.getValue(History.class);
-                    if (history.getHouse_id()==house_id && history.getRoom_id()==room_id)
+                    if (history.getHouse_id().equals(house_id) && history.getRoom_id().equals(room_id))
                     {
                         histories.add(history);
                     }
@@ -68,7 +68,7 @@ public class FireBaseHelper {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void sendHistoryData(int room_id, float value, final DataStatus dataStatus)
+    public void sendHistoryData(String room_id, float value, final DataStatus dataStatus)
     {
         rff= firebaseDatabase.getReference("History");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");

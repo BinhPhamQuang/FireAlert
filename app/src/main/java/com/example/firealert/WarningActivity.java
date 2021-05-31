@@ -99,7 +99,7 @@ public class WarningActivity extends AppCompatActivity {
     {
         String value= getIntent().getStringExtra("value");
         String roomName= getIntent().getStringExtra("room_name");
-        int room_id = indexTopic;
+        String room_id = Integer.toString(indexTopic);
         tv_nameRoom.setText(roomName);
         tv_valueGasConcentration.setText(value);
         FireBaseHelper.getInstance().sendHistoryData(room_id, Float.parseFloat(value), new FireBaseHelper.DataStatus() {
