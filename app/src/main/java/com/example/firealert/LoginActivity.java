@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                         username.setError(null);
                         username.setErrorEnabled(false);
 
-                        Long userIdFromDB = dataSnapshot.child(dataSnapshot.getChildren().iterator().next().getKey()).child("user_id").getValue(Long.class);
+                        String userIdFromDB = dataSnapshot.child(dataSnapshot.getChildren().iterator().next().getKey()).child("user_id").getValue(String.class);
                         String emailFromDB = dataSnapshot.child(dataSnapshot.getChildren().iterator().next().getKey()).child("email").getValue(String.class);
                         String addressFromDB = dataSnapshot.child(dataSnapshot.getChildren().iterator().next().getKey()).child("address").getValue(String.class);
                         String phoneFromDB = dataSnapshot.child(dataSnapshot.getChildren().iterator().next().getKey()).child("phone").getValue(String.class);

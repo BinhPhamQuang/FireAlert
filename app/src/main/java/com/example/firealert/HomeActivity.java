@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public static CardView badge;
     public static String GasConcentration;
-    Long userId;
+    String userId;
     String email, address, phone, username, password;
 
     @Override
@@ -78,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
             int extra = getIntent().getIntExtra("notification", 1);
             badge.setVisibility(extra);
         } else if (className.equals("LoginActivity")) {
-            userId = getIntent().getLongExtra("user_id", 0);
+            userId = getIntent().getStringExtra("user_id");
             email = getIntent().getStringExtra("email");
             address = getIntent().getStringExtra("address");
             phone = getIntent().getStringExtra("phone");

@@ -24,7 +24,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class SettingsActivity extends AppCompatActivity {
     TextView helloTextView;
     MQTTService mqttService;
-    Long userId;
+    String userId;
     String email, address, phone, username, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
         helloTextView = (TextView) findViewById(R.id.txtview_hello);
 
         username = getIntent().getStringExtra("username");
-        userId = getIntent().getLongExtra("user_id", 0);
+        userId = getIntent().getStringExtra("user_id");
         email = getIntent().getStringExtra("email");
         address = getIntent().getStringExtra("address");
         phone = getIntent().getStringExtra("phone");

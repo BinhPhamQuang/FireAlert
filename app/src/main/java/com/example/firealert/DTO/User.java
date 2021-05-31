@@ -12,10 +12,10 @@ public class User {
         return  user;
     }
     //set default value for test mode !
-    private int user_id=1;
-    private int house_id=1;
+    private String user_id = "1";
+    private int house_id = 1;
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 
@@ -23,7 +23,7 @@ public class User {
         this.house_id = house_id;
     }
 
-    public int getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 

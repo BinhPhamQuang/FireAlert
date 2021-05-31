@@ -2,8 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:id="@+id/padd"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -56,6 +57,7 @@
             android:paddingBottom="18dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:nextFocusDown="@+id/txt_passwordSignup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_top" />
@@ -72,9 +74,9 @@
             android:paddingTop="18dp"
             android:paddingRight="20dp"
             android:paddingBottom="18dp"
-            android:password="false"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:nextFocusDown="@+id/txt_passwordSignupAgain"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_emailSignup" />
@@ -91,9 +93,9 @@
             android:paddingTop="18dp"
             android:paddingRight="20dp"
             android:paddingBottom="18dp"
-            android:password="false"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:nextFocusDown="@+id/txt_yournameSignup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_passwordSignup" />
@@ -111,6 +113,8 @@
             android:paddingBottom="18dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:nextFocusDown="@+id/txt_addressSignup"
+            android:singleLine="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_passwordSignupAgain" />
@@ -128,6 +132,8 @@
             android:paddingBottom="18dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:nextFocusDown="@+id/txt_phoneNumberSignup"
+            android:singleLine="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_yournameSignup" />
@@ -146,30 +152,49 @@
             android:paddingBottom="18dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:singleLine="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_addressSignup" />
 
-        <TextView
+        <Button
             android:id="@+id/btn_signUp"
-            android:layout_width="134dp"
-            android:layout_height="41dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/layout_signup"
+            android:layout_marginTop="16dp"
             android:gravity="center_horizontal"
-            android:paddingTop="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="Sign up"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18dp"
             android:textStyle="bold"
+            app:backgroundTint="@color/_206796"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.454"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_phoneNumberSignup" />
+
+        <TextView
+            android:id="@+id/haveAccountTxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:padding="8sp"
+            android:text="I already have an account"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_signUp" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

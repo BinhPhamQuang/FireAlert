@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +27,8 @@ import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
     EditText txtEmailSignup, txtPasswordSignup, txtPasswordAgainSignup, txtYournameSignup, txtAddressSignup, txtPhoneNumberSignup;
-    TextView btnSignUp;
+    Button btnSignUp;
+    TextView txtHaveAccount;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
 
@@ -41,6 +44,8 @@ public class SignUpActivity extends AppCompatActivity {
         txtAddressSignup = findViewById(R.id.txt_addressSignup);
         txtPhoneNumberSignup = findViewById(R.id.txt_phoneNumberSignup);
         btnSignUp = findViewById(R.id.btn_signUp);
+        txtHaveAccount = findViewById(R.id.haveAccountTxt);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -106,11 +111,22 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        txtHaveAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
     }
 
     private boolean isValidatedInformation(String email, String password, String passwordAgain, String yourName, String address, String phoneNumber) {
         if (email.isEmpty()){
             txtEmailSignup.setError("Email is required!");
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            txtEmailSignup.setError("Invalid email address!");
             return false;
         }
         if (password.length() < 6) {
@@ -122,7 +138,6 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }
         if (!passwordAgain.equals(password)) {
-            txtPasswordSignup.setError("Password & Confirm Password does not match");
             txtPasswordAgainSignup.setError("Password & Confirm Password does not match");
             return false;
         }
@@ -136,6 +151,10 @@ public class SignUpActivity extends AppCompatActivity {
         }
         if (phoneNumber.isEmpty()) {
             txtPhoneNumberSignup.setError("Phone number is required!");
+            return false;
+        }
+        if (!Patterns.PHONE.matcher(phoneNumber).matches()){
+            txtPhoneNumberSignup.setError("Invalid phone number!");
             return false;
         }
 
