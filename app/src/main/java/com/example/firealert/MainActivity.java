@@ -15,6 +15,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.firealert.DTO.UserData;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class MainActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
@@ -54,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             startActivity( new Intent(MainActivity.this,LoginActivity.class));
             finish();
-
         }
 
         @Override

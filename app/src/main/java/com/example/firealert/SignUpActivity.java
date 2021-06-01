@@ -1,99 +1,164 @@
 package com.example.firealert;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Html;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.firealert.Adapter.ViewPageAdapter;
-import com.example.firealert.fragment_signup.FragmentSignUp1;
-import com.example.firealert.fragment_signup.FragmentSignup2;
-import com.example.firealert.fragment_signup.FragmentSignup3;
-import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
-import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+
 
 public class SignUpActivity extends AppCompatActivity {
+    EditText txtEmailSignup, txtPasswordSignup, txtPasswordAgainSignup, txtYournameSignup, txtAddressSignup, txtPhoneNumberSignup;
+    Button btnSignUp;
+    TextView txtHaveAccount;
+    FirebaseAuth firebaseAuth;
+    DatabaseReference databaseReference;
 
-    ViewPager viewPager;
-    ImageButton btnBack;
-    ImageButton btnNext;
-    TextView tv1;
-    ViewPageAdapter viewPageAdapter;
-    DotsIndicator dotsIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        viewPager= findViewById(R.id.viewpager_signup);
-        btnBack= findViewById(R.id.btnBack);
-        btnNext= findViewById(R.id.btnNext);
-        tv1 = findViewById(R.id.tv_top);
-        dotsIndicator = findViewById(R.id.dots_indicator);
+
+        txtEmailSignup = findViewById(R.id.txt_emailSignup);
+        txtPasswordSignup = findViewById(R.id.txt_passwordSignup);
+        txtPasswordAgainSignup = findViewById(R.id.txt_passwordSignupAgain);
+        txtYournameSignup = findViewById(R.id.txt_yournameSignup);
+        txtAddressSignup = findViewById(R.id.txt_addressSignup);
+        txtPhoneNumberSignup = findViewById(R.id.txt_phoneNumberSignup);
+        btnSignUp = findViewById(R.id.btn_signUp);
+        txtHaveAccount = findViewById(R.id.haveAccountTxt);
 
 
+        firebaseAuth = FirebaseAuth.getInstance();
 
-
-        getTab();
-        setColorforTopLabel();
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (viewPager.getCurrentItem()==0)
-                {
-                   startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
-                   finish();
+                String emailSignup, passwordSignup, passwordAgainSignup, yourNameSignup, addressSignup, phoneNumberSignup;
+                emailSignup = txtEmailSignup.getText().toString();
+                passwordSignup = txtPasswordSignup.getText().toString();
+                passwordAgainSignup = txtPasswordAgainSignup.getText().toString();
+                yourNameSignup = txtYournameSignup.getText().toString();
+                addressSignup = txtAddressSignup.getText().toString();
+                phoneNumberSignup = txtPhoneNumberSignup.getText().toString();
+
+                if (isValidatedInformation(emailSignup, passwordSignup, passwordAgainSignup, yourNameSignup, addressSignup, phoneNumberSignup)) {
+                    firebaseAuth.createUserWithEmailAndPassword(emailSignup, passwordSignup)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                                        databaseReference = FirebaseDatabase.getInstance().getReference("User").child(user.getUid());
+                                        HashMap<String, String> userInformation = new HashMap<>();
+                                        userInformation.put("user_id", user.getUid());
+                                        userInformation.put("email", emailSignup);
+                                        userInformation.put("username", yourNameSignup);
+                                        userInformation.put("address", addressSignup);
+                                        userInformation.put("phone", phoneNumberSignup);
+                                        databaseReference.setValue(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                                                }
+                                                else {
+                                                    Toast.makeText(SignUpActivity.this,"Sign up failed!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                        finish();
+                                    }
+                                    else {
+                                        try {
+                                            throw task.getException();
+                                        }
+                                        catch(FirebaseAuthInvalidCredentialsException e) {
+                                            txtEmailSignup.setError("The mail address is malformed!");
+                                        }
+                                        catch(FirebaseAuthUserCollisionException e) {
+                                            txtEmailSignup.setError("There already exists the email address!");
+                                        }
+                                        catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
                 }
-                else
-                {
-                    viewPager.setCurrentItem(viewPager.getCurrentItem()-1);
-                }
-            }
-        });
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewPager.getCurrentItem()!=2)
-                {
-                    viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
-                }
-                else
-                {
-                    startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
-                    finish();
+                else {
+                    return;
                 }
             }
         });
 
-    }
-    private void setColorforTopLabel()
-    {
-        String a=  "<font color=" + "#0F4C75" + ">" + "Get started" + "</font>";
-        String b=  "<font color=" + "#3282B8" + ">" + " with new account !" + "</font>";
-        tv1.setText(Html.fromHtml(a+b));
-    }
-    private void getTab()
-    {
-         viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
-        new Handler().post(new Runnable() {
+        txtHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                viewPageAdapter.addFragment(FragmentSignUp1.getInstance(),"1");
-                viewPageAdapter.addFragment(FragmentSignup2.getInstance(),"2");
-                viewPageAdapter.addFragment(FragmentSignup3.getInstance(),"3");
-                viewPager.setAdapter(viewPageAdapter);
-                dotsIndicator.setViewPager(viewPager);
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
+
     }
+
+    private boolean isValidatedInformation(String email, String password, String passwordAgain, String yourName, String address, String phoneNumber) {
+        if (email.isEmpty()){
+            txtEmailSignup.setError("Email is required!");
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            txtEmailSignup.setError("Invalid email address!");
+            return false;
+        }
+        if (password.length() < 6) {
+            if (password.isEmpty()) {
+                txtPasswordSignup.setError("Password is required!");
+                return false;
+            }
+            txtPasswordSignup.setError("Password length is more 6 letters!");
+            return false;
+        }
+        if (!passwordAgain.equals(password)) {
+            txtPasswordAgainSignup.setError("Password & Confirm Password does not match");
+            return false;
+        }
+        if (yourName.isEmpty()) {
+            txtYournameSignup.setError("Your name is required!");
+            return false;
+        }
+        if (address.isEmpty()) {
+            txtAddressSignup.setError("Address is required!");
+            return false;
+        }
+        if (phoneNumber.isEmpty()) {
+            txtPhoneNumberSignup.setError("Phone number is required!");
+            return false;
+        }
+        if (!Patterns.PHONE.matcher(phoneNumber).matches()){
+            txtPhoneNumberSignup.setError("Invalid phone number!");
+            return false;
+        }
+
+        return true;
+    }
+
 
 }

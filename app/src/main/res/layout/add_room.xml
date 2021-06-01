@@ -28,7 +28,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Room name"
+            android:text="Insert IoT Room's information"
             android:textColor="@color/background"
             android:textStyle="bold"
             android:textSize="22dp"
@@ -37,7 +37,7 @@
             android:gravity="center_horizontal" />
 
         <EditText
-            android:id="@+id/txt_roomName"
+            android:id="@+id/txt_add"
             android:layout_width="match_parent"
             android:layout_height="47dp"
             android:background="@drawable/layout_button"
@@ -46,28 +46,71 @@
             android:textColor="@color/background"
             android:layout_marginBottom="30dp"
             />
+        <TableLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+            <TableRow
+                android:id="@+id/row1"
+                android:layout_marginBottom="10dp">
+                <Button
+                    android:id="@+id/btn_insertDRV"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/layout_button"
+                    android:text="  DRV sensor "
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textColor="@color/background"
+                    app:backgroundTint="#3282B8"/>
+                <TextView/>
+                <Button
+                    android:id="@+id/btn_insertGas"
+                    android:background="@drawable/layout_button"
+                    android:text="Gas sensor"
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textColor="@color/background"
+                    app:backgroundTint="#3282B8"/>
+            </TableRow>
 
-        <Button
-            android:id="@+id/btn_findSensor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/layout_button"
-            android:text="Find sensor"
-            android:textAllCaps="false"
-            android:textSize="22dp"
-            android:textColor="@color/background"
-            android:layout_marginBottom="10dp"
-            app:backgroundTint="#3282B8" />
-        <Button
-            android:layout_marginBottom="10dp"
-            android:id="@+id/btn_SaveRoom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/layout_button"
-            android:text="Save"
-            android:textAllCaps="false"
-            android:textSize="22dp"
-            android:textColor="@color/background"
-            app:backgroundTint="#3282B8" />
+            <TableRow
+                android:id="@+id/row2"
+                android:layout_marginBottom="10dp">
+                <Button
+                    android:id="@+id/btn_insertLed"
+                    android:background="@drawable/layout_button"
+                    android:text="Led sensor"
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textColor="@color/background"
+                    app:backgroundTint="#3282B8"/>
+                <TextView/>
+                <Button
+                    android:id="@+id/btn_insertBuzzer"
+                    android:background="@drawable/layout_button"
+                    android:text="Speaker sensor"
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textColor="@color/background"
+                    app:backgroundTint="#3282B8"/>
+            </TableRow>
+
+            <Button
+                android:layout_marginBottom="10dp"
+                android:id="@+id/btn_addRoom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_button"
+                android:text="Insert room's name"
+                android:textAllCaps="false"
+                android:textSize="22dp"
+                android:textColor="@color/dark"
+                android:textStyle="bold"
+                app:backgroundTint="@color/white" />
+
+        </TableLayout>
+
+
     </LinearLayout>
 </RelativeLayout>

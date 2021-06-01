@@ -36,7 +36,7 @@
             />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/username_inputlayout"
+            android:id="@+id/email_inputlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_1"
@@ -55,11 +55,13 @@
             app:suffixTextColor="@color/dark">
 
             <EditText
-                android:id="@+id/txt_username"
+                android:id="@+id/txt_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/textbox"
-                android:hint="Username"
+                android:hint="Email address"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
                 android:textColor="@color/black"
                 android:textColorHint="@color/white"
                 android:textCursorDrawable="@drawable/custom_cursor" />
@@ -69,7 +71,7 @@
             android:id="@+id/password_inputlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/username_inputlayout"
+            android:layout_below="@id/email_inputlayout"
             android:layout_marginTop="10dp"
             android:textColorHint="@color/dark"
             app:boxStrokeColor="@color/dark"
@@ -91,6 +93,7 @@
                 android:background="@drawable/textbox"
                 android:hint="Password"
                 android:password="true"
+                android:singleLine="true"
                 android:textColor="@color/black"
                 android:textColorHint="@color/white"
                 android:textCursorDrawable="@drawable/custom_cursor" />
