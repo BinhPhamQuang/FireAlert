@@ -28,7 +28,7 @@ public class AccountActivity extends AppCompatActivity {
     ViewPageAdapter viewPageAdapter;
     TabLayout tab_layout;
     MQTTService mqttService;
-    String address, phone, username;
+    String userId, email, address, phone, username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +37,8 @@ public class AccountActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewpager_account);
         tab_layout= findViewById(R.id.tab_layout);
 
+        userId = getIntent().getStringExtra("userId");
+        email = getIntent().getStringExtra("email");
         address = getIntent().getStringExtra("address");
         phone = getIntent().getStringExtra("phone");
         username = getIntent().getStringExtra("username");
@@ -100,7 +102,7 @@ public class AccountActivity extends AppCompatActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                viewPageAdapter.addFragment(FragmentAccountTab1.getInstance(username, phone, address),"Information");
+                viewPageAdapter.addFragment(FragmentAccountTab1.getInstance(userId, email, username, phone, address),"Information");
                 viewPageAdapter.addFragment(FragmentAccountTab2.getInstance(),"Account");
                 viewPager.setAdapter(viewPageAdapter);
                 tab_layout.setupWithViewPager(viewPager);

@@ -50,21 +50,21 @@
                 android:textColor="@color/dark"
                 android:gravity="left"
                 />
+
             <EditText
                 android:id="@+id/txt_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/textbox2"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/textbox2"
+                android:paddingLeft="10dp"
+                android:paddingTop="8dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="8dp"
                 android:text="Binh Pham"
-                android:textStyle="bold"
                 android:textColor="@color/dark"
                 android:textSize="20dp"
-                />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -135,21 +135,23 @@
                 android:textColor="@color/dark"
                 android:gravity="left"
                 />
+
             <EditText
                 android:id="@+id/txt_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/textbox2"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/textbox2"
+                android:inputType="phone"
+                android:paddingLeft="10dp"
+                android:paddingTop="8dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="8dp"
+                android:singleLine="true"
                 android:text="0947412289"
-                android:textStyle="bold"
                 android:textColor="@color/dark"
                 android:textSize="20dp"
-                />
+                android:textStyle="bold" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

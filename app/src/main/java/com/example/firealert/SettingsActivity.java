@@ -34,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
     TextView helloTextView;
     Button btnSignOut;
     MQTTService mqttService;
-    private String address, phone, username;
+    private String userId, email, address, phone, username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +42,8 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         helloTextView = (TextView) findViewById(R.id.txtview_hello);
 
+        userId = getIntent().getStringExtra("userId");
+        email = getIntent().getStringExtra("email");
         username = getIntent().getStringExtra("username");
         phone = getIntent().getStringExtra("phone");
         address = getIntent().getStringExtra("address");
@@ -60,6 +62,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),AccountActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("email", email);
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
@@ -80,7 +84,11 @@ public class SettingsActivity extends AppCompatActivity {
         rl_privacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getApplicationContext(),PrivacyActivity.class);
+                Intent intent= new Intent(getApplicationContext(), PrivacyActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("email", email);
+                intent.putExtra("address", address);
+                intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
                 startActivity(intent);
             }

@@ -59,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
-    private String address, phone, username;
+    private String userId, email, address, phone, username;
 
     public static CardView badge;
     public static String GasConcentration;
@@ -83,6 +83,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 UserData user = snapshot.getValue(UserData.class);
                 assert user != null;
+                userId = user.getUser_id();
+                email = user.getEmail();
                 username = user.getUsername();
                 address = user.getAddress();
                 phone = user.getPhone();
@@ -149,6 +151,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),SettingsActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("email", email);
                 intent.putExtra("username", username);
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
