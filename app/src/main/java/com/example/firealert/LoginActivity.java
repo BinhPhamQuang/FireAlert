@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,7 +56,13 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            if (isEmailVerified()) {
+                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                return;
+                            }
+                            startActivity(new Intent(getApplicationContext(), VerifyEmailActivity.class));
                             finish();
                         }
                     })
@@ -81,7 +88,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            if (isEmailVerified()) {
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            }
+            else {
+                startActivity(new Intent(getApplicationContext(), VerifyEmailActivity.class));
+            }
             finish();
         }
     }
@@ -105,6 +117,11 @@ public class LoginActivity extends AppCompatActivity {
             passwordLayout.setErrorEnabled(false);
         }
         return true;
+    }
+
+    private boolean isEmailVerified() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        return firebaseUser.isEmailVerified();
     }
 
 }

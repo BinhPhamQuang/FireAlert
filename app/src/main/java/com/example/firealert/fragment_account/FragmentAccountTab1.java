@@ -78,10 +78,12 @@ public class FragmentAccountTab1 extends Fragment {
                     databaseReference.child("username").setValue(nameEditText.getText().toString().trim());
                     databaseReference.child("address").setValue(addressEditText.getText().toString().trim());
                     databaseReference.child("phone").setValue(phoneEditText.getText().toString().trim());
-                    startActivity(new Intent(getActivity(), HomeActivity.class));
-                    if (getActivity() != null) {
-                        getActivity().finish();
-                    }
+                    Toast.makeText(getActivity(), "Your information has been updated!", Toast.LENGTH_SHORT).show();
+
+                    // Remove all the previous activities from the back stack
+                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
                 else {
                     Toast.makeText(getActivity(), "Your information is not changed!", Toast.LENGTH_SHORT).show();
