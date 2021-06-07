@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextView btnSignUp;
+    private TextView btnSignUp, txtForgottenPassword;
     private ImageButton btnLogin;
     private TextInputLayout emailLayout, passwordLayout;
     private FirebaseAuth firebaseAuth;
@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         emailLayout = findViewById(R.id.email_inputlayout);
         passwordLayout = findViewById(R.id.password_inputlayout);
+        txtForgottenPassword = findViewById(R.id.txt_forgottenPassword);
         firebaseAuth = FirebaseAuth.getInstance();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +81,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            }
+        });
+
+        txtForgottenPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ForgottenPasswordActivity.class));
+                finish();
             }
         });
     }

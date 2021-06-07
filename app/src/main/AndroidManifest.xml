@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireAlert">
-        <activity android:name=".VerifyEmailActivity"></activity>
+        <activity android:name=".ForgottenPasswordActivity"></activity>
+        <activity android:name=".VerifyEmailActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".fragment_bottom_sheet.Confirm" />
         <activity android:name=".PrivacyActivity" />
