@@ -1,9 +1,12 @@
 package com.example.firealert;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -22,6 +25,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 
 public class RoomDetailActivity extends AppCompatActivity {
@@ -29,7 +33,8 @@ public class RoomDetailActivity extends AppCompatActivity {
     private ArrayList<HashMap<String,String>> list;
     public static final String ROOM_NAME = "1";
     public static final String GAS ="2";
-    MQTTService mqttService;
+    MQTTService mqttServiceGet;
+    MQTTService mqttServiceSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,9 @@ public class RoomDetailActivity extends AppCompatActivity {
             }
         });
 
-        populateList();
-
+//        populateList();
+        Intent getIntent = getIntent();
+        list =  (ArrayList<HashMap<String,String>>) getIntent.getSerializableExtra("listRoom");
         ListView listView = (ListView) findViewById(R.id.listView);
         RoomDetailAdapter adapter = new RoomDetailAdapter(this, list);
         listView.setAdapter(adapter);
@@ -68,11 +74,14 @@ public class RoomDetailActivity extends AppCompatActivity {
 
 
         try {
-            mqttService = new MQTTService(this);
-        } catch (MqttException e) {
+            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get);
+            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send);
+            //AddItemsToRecyclerViewArrayList();
+        }
+        catch (MqttException e) {
             e.printStackTrace();
         }
-        mqttService.setCallback(new MqttCallbackExtended() {
+        mqttServiceGet.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
 
@@ -80,30 +89,69 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             @Override
             public void connectionLost(Throwable cause) {
-
+                Toast.makeText(getApplicationContext(),"Can't connect to server get", Toast.LENGTH_SHORT).show();
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if (Float.parseFloat(message.toString()) >= 10) {
+                Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
+                int indexTopic = 0;
+                for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
+                    if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
+                        indexTopic = i;
+                    }
+                }
+                System.out.println(message.toString());
+                list.get(indexTopic).put("2","6");
+                adapter.notifyDataSetChanged();
+                if (Float.parseFloat(mess.get("data")) == 1)
+                {
+                    Log.d("Message Arrived: ", topic);
+                    String GasConcentration = mess.get("data");
                     if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
-//                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-//                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
-                        mqttService.sendDataMQTT(mqttService.SPEAKER, "biennguyenbk00/feeds/output.buzzer");
-                        mqttService.sendDataMQTT(mqttService.LED, "biennguyenbk00/feeds/output.led");
+                        mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
+                        mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
                         Intent intent = new Intent(RoomDetailActivity.this, WarningActivity.class);
                         // change this value for send data to another activity
-                        intent.putExtra("room_name", "Room 1");
+                        intent.putExtra("room_name", mqttServiceSend.rooms.get(indexTopic));
                         //--------------------------------------------
-                        intent.putExtra("value", message.toString());
+                        intent.putExtra("value", mess.get("data"));
+                        // must change this value by room_id
+                        intent.putExtra("indexTopic",indexTopic);
                         startActivity(intent);
                     }
                 }
                 else {
                     HomeActivity.badge.setVisibility(View.INVISIBLE);
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM_OFF,mqttServiceSend.drvTopic.get(indexTopic));
                 }
             }
 
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+
+        mqttServiceSend.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+                Toast.makeText(getApplicationContext(),"Can't connect to server send", Toast.LENGTH_SHORT).show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+
+            }
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
 

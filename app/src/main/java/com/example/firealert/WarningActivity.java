@@ -23,6 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.Charset;
+import java.util.Hashtable;
 import java.util.List;
 
 public class WarningActivity extends AppCompatActivity {
@@ -31,7 +32,8 @@ public class WarningActivity extends AppCompatActivity {
     Button btn_fixitnow;
     TextView tv_nameRoom;
     TextView tv_valueGasConcentration;
-    MQTTService mqttService;
+    MQTTService mqttServiceGet;
+    MQTTService mqttServiceSend;
     int indexTopic;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -55,7 +57,7 @@ public class WarningActivity extends AppCompatActivity {
         btn_fixitnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mqttService.sendDataMQTT(mqttService.DRV_PWM, mqttService.drvTopic[indexTopic]);
+                mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM, mqttServiceSend.drvTopic.get(indexTopic));
 //                mqttService.sendDataMQTT("240", "minhanhlhpx5/feeds/fan");
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 intent.putExtra("Class", "WarningActivity");
@@ -67,11 +69,14 @@ public class WarningActivity extends AppCompatActivity {
 
 
         try {
-            mqttService = new MQTTService(this);
-        } catch (MqttException e) {
+            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get);
+            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send);
+            //AddItemsToRecyclerViewArrayList();
+        }
+        catch (MqttException e) {
             e.printStackTrace();
         }
-        mqttService.setCallback(new MqttCallbackExtended() {
+        mqttServiceGet.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
 
@@ -79,14 +84,37 @@ public class WarningActivity extends AppCompatActivity {
 
             @Override
             public void connectionLost(Throwable cause) {
-
+                Toast.makeText(getApplicationContext(),"Can't connect to server get", Toast.LENGTH_SHORT).show();
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
 
             }
 
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+
+        mqttServiceSend.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+                Toast.makeText(getApplicationContext(),"Can't connect to server send", Toast.LENGTH_SHORT).show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+
+            }
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
 

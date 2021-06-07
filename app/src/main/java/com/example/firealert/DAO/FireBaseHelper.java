@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.example.firealert.DTO.History;
+import com.example.firealert.DTO.Room;
 import com.example.firealert.DTO.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -80,6 +81,33 @@ public class FireBaseHelper {
             @Override
             public void onSuccess(Void aVoid) {
                 dataStatus.dataIsSent();
+            }
+        });
+    }
+
+    public void getHouseDevice(String house_name,final DataStatus dataStatus)
+    {
+        List<Room> lst= new ArrayList<>();
+        rff =  firebaseDatabase.getReference("House").child(house_name);
+        rff.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                lst.clear();
+                List<String> keys= new ArrayList<>();
+                for (DataSnapshot dss:snapshot.getChildren())
+                {
+                    keys.add(dss.getKey());
+                    Room room= dss.getValue(Room.class);
+                    lst.add(room);
+
+                }
+                dataStatus.dataIsLoaded(lst,keys);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
