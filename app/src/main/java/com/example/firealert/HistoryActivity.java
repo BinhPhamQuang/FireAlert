@@ -23,7 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,8 +73,25 @@ public class HistoryActivity extends AppCompatActivity {
         FireBaseHelper.getInstance().getHistory(User.getInstance().getHouse_id(), room_id, new FireBaseHelper.DataStatus() {
             @Override
             public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
+                @SuppressWarnings("unchecked")
                 List<History> histories =  (List<History>) temp;
                 list.clear();
+                Collections.sort(histories, new Comparator<History>() {
+                    @Override
+                    public int compare(History o1, History o2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:m");
+                            date1 = sdf.parse(o1.getDate());
+                            date2 = sdf.parse(o2.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (date1 != null && date2 != null) return - date1.compareTo(date2);
+                        return 0;
+                    }
+                });                                               
 
 
                 for (History history:histories)
