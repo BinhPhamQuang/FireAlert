@@ -176,31 +176,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton btnRoomDetail = (ImageButton) findViewById(R.id.btnRoomDetail);
-        btnRoomDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddItemsToRecyclerViewArrayList();
-                Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
-                intent.putExtra("listRoom",list);
-                startActivity(intent);
-            }
-        });
-
-        //__ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
-//        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-//
-//
-//
-//        RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
-//        recyclerView.setLayoutManager(RecyclerViewLayoutManager);
-//
-//        adapter = new HomeAdapter(list);
-//        HorizontalLayout = new LinearLayoutManager(
-//                HomeActivity.this, LinearLayoutManager.HORIZONTAL,false);
-//        recyclerView.setLayoutManager(HorizontalLayout);
-//        recyclerView.setAdapter(adapter);
-        //__ END OF THIS PART
 
 
         try {
@@ -286,18 +261,69 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+        AddItemsToRecyclerViewArrayList();
+
+        //        __ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+
+        RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(RecyclerViewLayoutManager);
+
+
+        adapter = new HomeAdapter(list);
+        HorizontalLayout = new LinearLayoutManager(
+                HomeActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(HorizontalLayout);
+        recyclerView.setAdapter(adapter);
+//        __ END OF THIS PART
+
+        ImageButton btnRoomDetail = (ImageButton) findViewById(R.id.btnRoomDetail);
+        btnRoomDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
+                intent.putExtra("listRoom",list);
+                startActivity(intent);
+            }
+        });
 
     }
 
     public void AddItemsToRecyclerViewArrayList()
     {
-            list.clear();
-            for (int i = 0; i < mqttServiceGet.rooms.size(); i++) {
+        list.clear();
+        for (int i = 0; i < mqttServiceGet.rooms.size(); i++) {
 
-                HashMap<String, String> hashmap = new HashMap<String, String>();
-                hashmap.put(ROOM_NAME, mqttServiceGet.rooms.get(i));
-                hashmap.put(ROOM_GAS, "0");
-                list.add(hashmap);
-            }
+            HashMap<String, String> hashmap = new HashMap<String, String>();
+            hashmap.put(ROOM_NAME, mqttServiceGet.rooms.get(i));
+            hashmap.put(ROOM_GAS, "0");
+            list.add(hashmap);
+        }
+//        HashMap<String,String> hashmap = new HashMap<String,String>();
+//        HashMap<String,String> hashmap1 = new HashMap<String,String>();
+//        HashMap<String,String> hashmap2 = new HashMap<String,String>();
+//        HashMap<String,String> hashmap3 = new HashMap<String,String>();
+//        HashMap<String,String> hashmap4 = new HashMap<String,String>();
+//
+//        hashmap.put(ROOM_NAME, "Room 1");
+//        hashmap.put(ROOM_GAS, "0.00");
+//        list.add(hashmap);
+//
+//        hashmap1.put(ROOM_NAME, "Room 2");
+//        hashmap1.put(ROOM_GAS, "1.00");
+//        list.add(hashmap1);
+//
+//        hashmap2.put(ROOM_NAME, "Room 3");
+//        hashmap2.put(ROOM_GAS, "9.20");
+//        list.add(hashmap2);
+//
+//        hashmap3.put(ROOM_NAME, "Room 4");
+//        hashmap3.put(ROOM_GAS, "5.20");
+//        list.add(hashmap3);
+//
+//        hashmap4.put(ROOM_NAME, "Room 5");
+//        hashmap4.put(ROOM_GAS, "1.20");
+//        list.add(hashmap4);
     }
 }
