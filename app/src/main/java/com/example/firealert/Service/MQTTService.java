@@ -47,7 +47,7 @@ public class MQTTService {
         this.username = username;
         this.password = password;
         this.send = send;
-        SetUpHouseDevice();
+
         System.out.println(this.username);
         System.out.println(this.password);
 
@@ -76,6 +76,7 @@ public class MQTTService {
         });
 
         connect();
+        SetUpHouseDevice();
 
     }
 
@@ -100,6 +101,7 @@ public class MQTTService {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
+
                 }
 
                 @Override
@@ -117,6 +119,7 @@ public class MQTTService {
     private  void subscribeToTopic(String topic)
     {
         try {
+
             mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
@@ -155,13 +158,12 @@ public class MQTTService {
             @Override
             public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
                 List<Room> lst =  (List<Room>) temp;
-                System.out.println("Minh Anh");
                 for(Room dataRoom: lst){
                     if(!send) {
                         gasTopic.add(dataRoom.gas);
                         System.out.println(dataRoom.gas);
                     }
-                    if(send) {
+                    else {
                         drvTopic.add(dataRoom.drv);
                         System.out.println(dataRoom.drv);
                         ledTopic.add(dataRoom.led);
@@ -170,10 +172,9 @@ public class MQTTService {
                         System.out.println(dataRoom.buzzer);
                     }
                     rooms.add(dataRoom.name);
-                    System.out.println(dataRoom.name);
+
                 }
-                for (String topic: gasTopic) {
-                    System.out.println(topic);
+                for (String topic: gasTopic){
                     subscribeToTopic(topic);
                 }
             }
@@ -182,6 +183,8 @@ public class MQTTService {
 
             }
         });
+
+
     }
 
     public Hashtable<String,String> getMessage(String message){

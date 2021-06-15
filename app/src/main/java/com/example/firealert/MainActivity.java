@@ -8,12 +8,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
+import com.example.firealert.DAO.FireBaseHelper;
+import com.example.firealert.DTO.Room;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     //Use for Choose Server
     public static String Server_username_send;
     public static String Server_password_send;
     public static String Server_username_get;
     public static String Server_password_get;
+
+
+    public static ArrayList<String> rooms = new ArrayList<String>();
     //...........................
 
     //Get house link

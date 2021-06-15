@@ -58,13 +58,14 @@ public class AccountActivity extends AppCompatActivity {
         });
 
         try {
+
             mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
             mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
-            //AddItemsToRecyclerViewArrayList();
         }
         catch (MqttException e) {
             e.printStackTrace();
         }
+
         mqttServiceGet.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -79,23 +80,27 @@ public class AccountActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
+
                 Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
+
+                System.out.println(mess);
+                String data = mess.get("data");
+
+
                 int indexTopic = 0;
                 for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
                     if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
                         indexTopic = i;
                     }
                 }
-                if (Float.parseFloat(mess.get("data")) == 1)
-                {
+                if (data.equals("1")) {
                     Log.d("Message Arrived: ", topic);
-                    String GasConcentration = mess.get("data");
                     if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
                         mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
                         mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
                         Intent intent = new Intent(AccountActivity.this, WarningActivity.class);
                         // change this value for send data to another activity
-                        intent.putExtra("room_name", mqttServiceSend.rooms.get(indexTopic));
+                        intent.putExtra("room_name", mqttServiceGet.rooms.get(indexTopic));
                         //--------------------------------------------
                         intent.putExtra("value", mess.get("data"));
                         // must change this value by room_id
@@ -116,7 +121,6 @@ public class AccountActivity extends AppCompatActivity {
 
             }
         });
-
         mqttServiceSend.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {

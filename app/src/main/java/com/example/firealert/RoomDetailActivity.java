@@ -102,8 +102,8 @@ public class RoomDetailActivity extends AppCompatActivity {
                         indexTopic = i;
                     }
                 }
-                System.out.println(message.toString());
-                list.get(indexTopic).put("2","6");
+
+                list.get(indexTopic).put("2",mess.get("data"));
                 adapter.notifyDataSetChanged();
                 if (Float.parseFloat(mess.get("data")) == 1)
                 {
