@@ -44,7 +44,7 @@ public class WarningActivity extends AppCompatActivity {
         btn_fixitnow= findViewById(R.id.btn_fixitnow);
         tv_nameRoom= findViewById(R.id.tv_nameRoom);
         tv_valueGasConcentration= findViewById(R.id.tv_valueGasConcentration);
-        HomeActivity.badge.setVisibility(View.INVISIBLE);
+
         indexTopic = getIntent().getIntExtra("indexTopic",0);
         btn_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,8 +57,7 @@ public class WarningActivity extends AppCompatActivity {
         btn_fixitnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM, mqttServiceSend.drvTopic.get(indexTopic));
-//                mqttService.sendDataMQTT("240", "minhanhlhpx5/feeds/fan");
+//                mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM, mqttServiceSend.drvTopic.get(indexTopic));
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 intent.putExtra("Class", "WarningActivity");
                 startActivity(intent);
@@ -69,13 +68,14 @@ public class WarningActivity extends AppCompatActivity {
 
 
         try {
-            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get);
-            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send);
-            //AddItemsToRecyclerViewArrayList();
+
+            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
+            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
         }
         catch (MqttException e) {
             e.printStackTrace();
         }
+
         mqttServiceGet.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -91,6 +91,39 @@ public class WarningActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
 
+                Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
+
+                System.out.println(mess);
+                String data = mess.get("data");
+
+
+                int indexTopic = 0;
+                for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
+                    if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
+                        indexTopic = i;
+                    }
+                }
+                if (data.equals("1")) {
+                    Log.d("Message Arrived: ", topic);
+                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
+                        mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
+                        mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
+                        Intent intent = new Intent(WarningActivity.this, WarningActivity.class);
+                        // change this value for send data to another activity
+                        intent.putExtra("room_name", mqttServiceGet.rooms.get(indexTopic));
+                        //--------------------------------------------
+                        intent.putExtra("value", mess.get("data"));
+                        // must change this value by room_id
+                        intent.putExtra("indexTopic",indexTopic);
+                        startActivity(intent);
+                    }
+                }
+                else {
+                    HomeActivity.badge.setVisibility(View.INVISIBLE);
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM_OFF,mqttServiceSend.drvTopic.get(indexTopic));
+                }
             }
 
             @Override
@@ -98,7 +131,6 @@ public class WarningActivity extends AppCompatActivity {
 
             }
         });
-
         mqttServiceSend.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -130,16 +162,6 @@ public class WarningActivity extends AppCompatActivity {
         String room_id = Integer.toString(indexTopic);
         tv_nameRoom.setText(roomName);
         tv_valueGasConcentration.setText(value);
-        FireBaseHelper.getInstance().sendHistoryData(room_id, Float.parseFloat(value), new FireBaseHelper.DataStatus() {
-            @Override
-            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
 
-            }
-
-            @Override
-            public void dataIsSent() {
-
-            }
-        });
     }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.firealert.Service.MQTTService;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,81 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
                 addressSignup = txtAddressSignup.getText().toString();
                 phoneNumberSignup = txtPhoneNumberSignup.getText().toString();
                 if (isValidatedInformation(emailSignup, passwordSignup, passwordAgainSignup, yourNameSignup, addressSignup, phoneNumberSignup)) {
-                    firebaseAuth.createUserWithEmailAndPassword(emailSignup, passwordSignup)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                                        databaseReference = FirebaseDatabase.getInstance().getReference("User").child(user.getUid());
-                                        databaseReference.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if(snapshot.exists()){
-                                                    countUsers = (int) snapshot.getChildrenCount();
-                                                }
-                                                else{
-                                                    countUsers = 0;
-                                                }
-                                            }
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                        //We use default House ID is 1.
-                                        countUsers = 1;
-                                        String houseID = String.valueOf(countUsers);
-                                        HashMap<String, String> userInformation = new HashMap<>();
-                                        userInformation.put("user_id", user.getUid());
-                                        userInformation.put("email", emailSignup);
-                                        userInformation.put("username", yourNameSignup);
-                                        userInformation.put("address", addressSignup);
-                                        userInformation.put("phone", phoneNumberSignup);
-                                        userInformation.put("House ID", houseID);
-                                        databaseReference.setValue(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    String path = "";
-                                                    if(emailSignup.equals("cse@hcmut.edu.vn")){
-                                                        path = "CSE";
-                                                        MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
-                                                                "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
-                                                    }
-                                                    else {
-                                                        MainActivity.SetUpServer("minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",
-                                                                "minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",path);
-                                                    }
-                                                    Intent intent = new Intent(SignUpActivity.this,HomeActivity.class);
-                                                    startActivity(intent);
-                                                }
-                                                else {
-                                                    Toast.makeText(SignUpActivity.this,"Sign up failed!", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                                        finish();
-                                    }
-                                    else {
-                                        try {
-                                            throw task.getException();
-                                        }
-                                        catch(FirebaseAuthInvalidCredentialsException e) {
-                                            txtEmailSignup.setError("The mail address is malformed!");
-                                        }
-                                        catch(FirebaseAuthUserCollisionException e) {
-                                            txtEmailSignup.setError("There already exists the email address!");
-                                        }
-                                        catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            });
-                }
-                else {
-                    return;
+                    createUser(emailSignup, passwordSignup, yourNameSignup, addressSignup, phoneNumberSignup);
                 }
             }
         });
@@ -190,5 +119,68 @@ public class SignUpActivity extends AppCompatActivity {
         return true;
     }
 
+    private void createUser(String email, String password, String name, String address, String phone) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            databaseReference = FirebaseDatabase.getInstance().getReference("User").child(user.getUid());
+                            HashMap<String, String> userInformation = new HashMap<>();
+                            userInformation.put("user_id", user.getUid());
+                            userInformation.put("email", email);
+                            userInformation.put("username", name);
+                            userInformation.put("address", address);
+                            userInformation.put("phone", phone);
+                            databaseReference.setValue(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        verifyUserEmail();
+                                    }
+                                    else {
+                                        Toast.makeText(SignUpActivity.this,"Sign up failed!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                            finish();
+                        }
+                        else {
+                            try {
+                                throw task.getException();
+                            }
+                            catch(FirebaseAuthInvalidCredentialsException e) {
+                                txtEmailSignup.setError("The mail address is malformed!");
+                            }
+                            catch(FirebaseAuthUserCollisionException e) {
+                                txtEmailSignup.setError("There already exists the email address!");
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void verifyUserEmail() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser.sendEmailVerification()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Intent intent = new Intent(getApplicationContext(), VerifyEmailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("On Failure", "Email did not send. " + e.getMessage());
+                    }
+                });
+    }
 
 }

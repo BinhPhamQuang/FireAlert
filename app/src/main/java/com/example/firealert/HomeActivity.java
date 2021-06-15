@@ -65,7 +65,9 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
+
     private String address, phone, username;
+
     public static CardView badge;
     public static String GasConcentration;
     MQTTService mqttServiceGet;
@@ -181,13 +183,14 @@ public class HomeActivity extends AppCompatActivity {
 
 
         try {
-            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get);
-            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send);
 
+            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
+            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
         }
         catch (MqttException e) {
             e.printStackTrace();
         }
+
         mqttServiceGet.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -202,17 +205,20 @@ public class HomeActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
+
                 Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
-                System.out.println(message.toString());
+
+                System.out.println(mess);
+                String data = mess.get("data");
+
+
                 int indexTopic = 0;
                 for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
                     if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
                         indexTopic = i;
                     }
                 }
-                list.get(indexTopic).put(ROOM_GAS,mess.get("data"));
-                if (Float.parseFloat(mess.get("data")) == 1)
-                {
+                if (data.equals("1")) {
                     Log.d("Message Arrived: ", topic);
                     GasConcentration = mess.get("data");
                     if(badge.getVisibility() == View.INVISIBLE) {
@@ -220,7 +226,7 @@ public class HomeActivity extends AppCompatActivity {
                         mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
                         Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
                         // change this value for send data to another activity
-                        intent.putExtra("room_name", mqttServiceSend.rooms.get(indexTopic));
+                        intent.putExtra("room_name", mqttServiceGet.rooms.get(indexTopic));
                         //--------------------------------------------
                         intent.putExtra("value", mess.get("data"));
                         // must change this value by room_id
@@ -241,7 +247,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
         mqttServiceSend.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -263,6 +268,7 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+
         AddItemsToRecyclerViewArrayList();
 
         //        __ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
@@ -270,8 +276,6 @@ public class HomeActivity extends AppCompatActivity {
 
         RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(RecyclerViewLayoutManager);
-
-
         adapter = new HomeAdapter(list);
         HorizontalLayout = new LinearLayoutManager(
                 HomeActivity.this, LinearLayoutManager.HORIZONTAL,false);
@@ -289,12 +293,48 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     public void AddItemsToRecyclerViewArrayList()
     {
         list.clear();
-//        for (int i = 0; i < mqttServiceGet.rooms.size(); i++) {
+        if(mqttServiceGet.rooms.size()==0){
+            HashMap<String, String> hashmap = new HashMap<String, String>();
+            hashmap.put(ROOM_NAME, "Not connected");
+            hashmap.put(ROOM_GAS, "0");
+            list.add(hashmap);
+        }
+        else {
+            for (int i = 0; i < mqttServiceGet.rooms.size(); i++) {
+                HashMap<String, String> hashmap = new HashMap<String, String>();
+                hashmap.put(ROOM_NAME, mqttServiceGet.rooms.get(i));
+                hashmap.put(ROOM_GAS, "0");
+                list.add(hashmap);
+            }
+        }
+//        HashMap<String,String> hashmap = new HashMap<String,String>();
+//        HashMap<String,String> hashmap1 = new HashMap<String,String>();
+//        HashMap<String,String> hashmap2 = new HashMap<String,String>();
+//        HashMap<String,String> hashmap3 = new HashMap<String,String>();
+//        HashMap<String,String> hashmap4 = new HashMap<String,String>();
+//
+//        hashmap.put(ROOM_NAME, "Room 1");
+//        hashmap.put(ROOM_GAS, "0.00");
+//        list.add(hashmap);
+//
+//        hashmap1.put(ROOM_NAME, "Room 2");
+//        hashmap1.put(ROOM_GAS, "1.00");
+//        list.add(hashmap1);
+//
+//        hashmap2.put(ROOM_NAME, "Room 3");
+//        hashmap2.put(ROOM_GAS, "9.20");
+//        list.add(hashmap2);
+//
+//        hashmap3.put(ROOM_NAME, "Room 4");
+//        hashmap3.put(ROOM_GAS, "5.20");
+//        list.add(hashmap3);
+
 //
 //            HashMap<String, String> hashmap = new HashMap<String, String>();
 //            hashmap.put(ROOM_NAME, mqttServiceGet.rooms.get(i));
