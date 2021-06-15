@@ -58,8 +58,8 @@ public class AccountActivity extends AppCompatActivity {
         });
 
         try {
-            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get);
-            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send);
+            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
+            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
             //AddItemsToRecyclerViewArrayList();
         }
         catch (MqttException e) {

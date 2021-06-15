@@ -24,10 +24,10 @@ import java.util.List;
 
 public class MQTTService {
     final String serverUri= "tcp://io.adafruit.com:1883";
-    final String clientID="123456";
-
-    String username;
-    String password;
+    private final String clientID = "123456";
+    private final String username;
+    private final String password;
+    public final boolean send;
 
     public  ArrayList<String> gasTopic = new ArrayList<String>();
     public  ArrayList<String> drvTopic = new ArrayList<String>();
@@ -43,10 +43,14 @@ public class MQTTService {
     public final String DRV_PWM_OFF = "{\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"0\",\"unit\":\"\"}";
 
     public MqttAndroidClient mqttAndroidClient;
-    public MQTTService(Context context, String username, String password) throws MqttException {
-        SetUpHouseDevice();
+    public MQTTService(Context context, String username, String password, String clientID, boolean send) throws MqttException {
         this.username = username;
         this.password = password;
+        this.send = send;
+        SetUpHouseDevice();
+        System.out.println(this.username);
+        System.out.println(this.password);
+
         mqttAndroidClient = new MqttAndroidClient(context,serverUri,clientID);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -70,7 +74,9 @@ public class MQTTService {
 
             }
         });
+
         connect();
+
     }
 
     public void setCallback(MqttCallbackExtended callback)
@@ -94,7 +100,6 @@ public class MQTTService {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-                    for (String topic: gasTopic) { subscribeToTopic(topic); }
                 }
 
                 @Override
@@ -152,16 +157,24 @@ public class MQTTService {
                 List<Room> lst =  (List<Room>) temp;
                 System.out.println("Minh Anh");
                 for(Room dataRoom: lst){
-                    gasTopic.add(dataRoom.gas);
-                    System.out.println(dataRoom.gas);
-                    drvTopic.add(dataRoom.drv);
-                    System.out.println(dataRoom.drv);
-                    ledTopic.add(dataRoom.led);
-                    System.out.println(dataRoom.led);
-                    buzzerTopic.add(dataRoom.buzzer);
-                    System.out.println(dataRoom.buzzer);
+                    if(!send) {
+                        gasTopic.add(dataRoom.gas);
+                        System.out.println(dataRoom.gas);
+                    }
+                    if(send) {
+                        drvTopic.add(dataRoom.drv);
+                        System.out.println(dataRoom.drv);
+                        ledTopic.add(dataRoom.led);
+                        System.out.println(dataRoom.led);
+                        buzzerTopic.add(dataRoom.buzzer);
+                        System.out.println(dataRoom.buzzer);
+                    }
                     rooms.add(dataRoom.name);
                     System.out.println(dataRoom.name);
+                }
+                for (String topic: gasTopic) {
+                    System.out.println(topic);
+                    subscribeToTopic(topic);
                 }
             }
             @Override
@@ -176,19 +189,25 @@ public class MQTTService {
         int index = message.indexOf("\"id\"",0);
         int begin = message.indexOf("\"",index+4);
         int end = message.indexOf("\"",begin+1);
+
         result.put("id",message.substring(begin+1,end));
+
         index = message.indexOf("\"name\"",end+1);
         begin = message.indexOf("\"",index+6);
         end = message.indexOf("\"",begin+1);
         result.put("name",message.substring(begin+1,end));
+
         index = message.indexOf("\"data\"",end+1);
         begin = message.indexOf("\"",index+6);
         end = message.indexOf("\"",begin+1);
         result.put("data",message.substring(begin+1,end));
+
         index = message.indexOf("\"unit\"",end+1);
         begin = message.indexOf("\"",index+6);
         end = message.indexOf("\"",begin+1);
         result.put("unit",message.substring(begin+1,end));
+
+
         return result;
     }
 }

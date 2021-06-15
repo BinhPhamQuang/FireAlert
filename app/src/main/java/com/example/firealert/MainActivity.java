@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     //Get house link
     public static String HousePath;
     ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +76,5 @@ public class MainActivity extends AppCompatActivity {
         HousePath = path;
     }
 
-    public static void SetUpHouseDevice(){
 
-    }
 }

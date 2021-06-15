@@ -104,8 +104,8 @@ public class SignUpActivity extends AppCompatActivity {
                                                                 "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
                                                     }
                                                     else {
-                                                        MainActivity.SetUpServer("minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",
-                                                                "minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",path);
+                                                        MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+                                                                "minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",path);
                                                     }
                                                     Intent intent = new Intent(SignUpActivity.this,HomeActivity.class);
                                                     startActivity(intent);

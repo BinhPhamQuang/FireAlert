@@ -57,10 +57,11 @@ public class LoginActivity extends AppCompatActivity {
                                 path += "CSE";
                                 MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
                                         "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
+
                             }
                             else {
-                                MainActivity.SetUpServer("minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",
-                                        "minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",path);
+                                MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+                                        "minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",path);
                             }
 
                             Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
@@ -92,15 +93,17 @@ public class LoginActivity extends AppCompatActivity {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             String path = "";
             if(FirebaseAuth.getInstance().getCurrentUser().getEmail().equals("cse@hcmut.edu.vn")){
-                System.out.println("Minh anh");
                 path += "CSE";
                 MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
                         "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
+                MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+                        "biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj",path);
             }
             else {
-                MainActivity.SetUpServer("minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",
-                        "minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",path);
+                MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+                        "minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",path);
             }
+
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             finish();
         }

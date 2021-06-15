@@ -204,13 +204,13 @@ public class HomeActivity extends AppCompatActivity {
 
 
         try {
-            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get);
-            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send);
-
+            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
+            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
         }
         catch (MqttException e) {
             e.printStackTrace();
         }
+
         mqttServiceGet.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -226,16 +226,21 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
+                System.out.println(mess);
                 System.out.println(message.toString());
+
+                String data = mess.get("data");
+                System.out.println(data);
                 int indexTopic = 0;
                 for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
                     if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
                         indexTopic = i;
                     }
                 }
-                list.get(indexTopic).put(ROOM_GAS,mess.get("data"));
-                if (Float.parseFloat(mess.get("data")) == 1)
-                {
+
+                assert data != null;
+                if (data.equals("1")) {
+                    System.out.println(true);
                     Log.d("Message Arrived: ", topic);
                     GasConcentration = mess.get("data");
                     if(badge.getVisibility() == View.INVISIBLE) {
@@ -252,6 +257,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }
                 else {
+                    System.out.println(false);
                     badge.setVisibility(View.INVISIBLE);
                     mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
                     mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
@@ -264,7 +270,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
         mqttServiceSend.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -286,6 +291,7 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+
 
     }
 
