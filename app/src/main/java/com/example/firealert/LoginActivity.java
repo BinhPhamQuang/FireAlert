@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextView btnSignUp;
+    private TextView btnSignUp, txtForgottenPassword;
     private ImageButton btnLogin;
     private TextInputLayout emailLayout, passwordLayout;
     private FirebaseAuth firebaseAuth;
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         emailLayout = findViewById(R.id.email_inputlayout);
         passwordLayout = findViewById(R.id.password_inputlayout);
+        txtForgottenPassword = findViewById(R.id.txt_forgottenPassword);
         firebaseAuth = FirebaseAuth.getInstance();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +57,13 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            if (isEmailVerified()) {
+                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                return;
+                            }
+                            startActivity(new Intent(getApplicationContext(), VerifyEmailActivity.class));
                             finish();
                         }
                     })
@@ -75,13 +83,26 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
             }
         });
+
+        txtForgottenPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ForgottenPasswordActivity.class));
+                finish();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            if (isEmailVerified()) {
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            }
+            else {
+                startActivity(new Intent(getApplicationContext(), VerifyEmailActivity.class));
+            }
             finish();
         }
     }
@@ -105,6 +126,11 @@ public class LoginActivity extends AppCompatActivity {
             passwordLayout.setErrorEnabled(false);
         }
         return true;
+    }
+
+    private boolean isEmailVerified() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        return firebaseUser.isEmailVerified();
     }
 
 }
