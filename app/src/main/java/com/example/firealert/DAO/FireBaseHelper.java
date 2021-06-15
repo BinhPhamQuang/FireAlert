@@ -40,32 +40,32 @@ public class FireBaseHelper {
     }
     public void getHistory(String house_id,String room_id,final DataStatus dataStatus)
     {
-        List<History> histories= new ArrayList<>();
-        rff=  firebaseDatabase.getReference("History");
-        rff.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                histories.clear();
-                List<String> keys= new ArrayList<>();
-                for (DataSnapshot dss:snapshot.getChildren())
-                {
-                    keys.add(dss.getKey());
-                    History history= dss.getValue(History.class);
-                    if (history.getHouse_id().equals(house_id) && history.getRoom_id().equals(room_id))
-                    {
-                        histories.add(history);
-                    }
-
-                }
-                dataStatus.dataIsLoaded(histories,keys);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//        List<History> histories= new ArrayList<>();
+//        rff=  firebaseDatabase.getReference("History");
+//        rff.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                histories.clear();
+//                List<String> keys= new ArrayList<>();
+//                for (DataSnapshot dss:snapshot.getChildren())
+//                {
+//                    keys.add(dss.getKey());
+//                    History history= dss.getValue(History.class);
+//                    if (history.getHouse_id().equals(house_id) && history.getRoom_id().equals(room_id))
+//                    {
+//                        histories.add(history);
+//                    }
+//
+//                }
+//                dataStatus.dataIsLoaded(histories,keys);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

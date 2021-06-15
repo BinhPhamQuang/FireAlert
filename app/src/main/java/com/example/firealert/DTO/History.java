@@ -2,32 +2,16 @@ package com.example.firealert.DTO;
 
 public class History {
     private String date;
-    private String house_id;
-    private String room_id;
+    private String id;
+    private String name;
     private float value;
 
     public  History()
     {}
-    public History(String date, String house_id, String room_id, float value) {
+    public History(String date, String id, String name, float value) {
         this.date = date;
-        this.house_id = house_id;
-        this.room_id = room_id;
-        this.value = value;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setHouse_id(String house_id) {
-        this.house_id = house_id;
-    }
-
-    public void setRoom_id(String room_id) {
-        this.room_id = room_id;
-    }
-
-    public void setValue(float value) {
+        this.id = id;
+        this.name = name;
         this.value = value;
     }
 
@@ -35,15 +19,31 @@ public class History {
         return date;
     }
 
-    public String getHouse_id() {
-        return house_id;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getRoom_id() {
-        return room_id;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String room_id) {
+        this.id = room_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public float getValue() {
         return value;
+    }
+
+    public void setValue(float value) {
+        this.value = value;
     }
 }

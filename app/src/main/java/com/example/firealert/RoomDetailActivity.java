@@ -14,9 +14,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.example.firealert.API.ApiService;
 import com.example.firealert.Adapter.HistoryDataAdapter;
 import com.example.firealert.Adapter.RoomDetailAdapter;
+import com.example.firealert.DTO.History;
+import com.example.firealert.DTO.UserRequest;
 import com.example.firealert.Service.MQTTService;
+import com.google.gson.Gson;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -26,6 +30,10 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class RoomDetailActivity extends AppCompatActivity {
@@ -49,7 +57,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             }
         });
 
-//        populateList();
+        populateList();
         Intent getIntent = getIntent();
         list =  (ArrayList<HashMap<String,String>>) getIntent.getSerializableExtra("listRoom");
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -65,9 +73,10 @@ public class RoomDetailActivity extends AppCompatActivity {
 
 
                 //send room_id here
-                intent.putExtra("room_id",0);
+                intent.putExtra("room_id","0");
                 //-------------------------------
                 startActivity(intent);
+
 
             }
         });

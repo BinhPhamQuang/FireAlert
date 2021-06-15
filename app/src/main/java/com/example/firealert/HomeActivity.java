@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.firealert.Adapter.HomeAdapter;
 import com.example.firealert.DTO.Room;
 import com.example.firealert.DTO.UserData;
+import com.example.firealert.DTO.UserRequest;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
+import com.google.gson.Gson;
 
 import org.eclipse.paho.android.service.MqttService;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -281,6 +283,9 @@ public class HomeActivity extends AppCompatActivity {
         btnRoomDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UserRequest userRequest = new UserRequest("biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj");
+                Gson gson = new Gson();
+                String strJson = gson.toJson(userRequest);
 
                 Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
                 intent.putExtra("listRoom",list);
@@ -293,37 +298,37 @@ public class HomeActivity extends AppCompatActivity {
     public void AddItemsToRecyclerViewArrayList()
     {
         list.clear();
-        for (int i = 0; i < mqttServiceGet.rooms.size(); i++) {
+//        for (int i = 0; i < mqttServiceGet.rooms.size(); i++) {
+//
+//            HashMap<String, String> hashmap = new HashMap<String, String>();
+//            hashmap.put(ROOM_NAME, mqttServiceGet.rooms.get(i));
+//            hashmap.put(ROOM_GAS, "0");
+//            list.add(hashmap);
+//        }
+        HashMap<String,String> hashmap = new HashMap<String,String>();
+        HashMap<String,String> hashmap1 = new HashMap<String,String>();
+        HashMap<String,String> hashmap2 = new HashMap<String,String>();
+        HashMap<String,String> hashmap3 = new HashMap<String,String>();
+        HashMap<String,String> hashmap4 = new HashMap<String,String>();
 
-            HashMap<String, String> hashmap = new HashMap<String, String>();
-            hashmap.put(ROOM_NAME, mqttServiceGet.rooms.get(i));
-            hashmap.put(ROOM_GAS, "0");
-            list.add(hashmap);
-        }
-//        HashMap<String,String> hashmap = new HashMap<String,String>();
-//        HashMap<String,String> hashmap1 = new HashMap<String,String>();
-//        HashMap<String,String> hashmap2 = new HashMap<String,String>();
-//        HashMap<String,String> hashmap3 = new HashMap<String,String>();
-//        HashMap<String,String> hashmap4 = new HashMap<String,String>();
-//
-//        hashmap.put(ROOM_NAME, "Room 1");
-//        hashmap.put(ROOM_GAS, "0.00");
-//        list.add(hashmap);
-//
-//        hashmap1.put(ROOM_NAME, "Room 2");
-//        hashmap1.put(ROOM_GAS, "1.00");
-//        list.add(hashmap1);
-//
-//        hashmap2.put(ROOM_NAME, "Room 3");
-//        hashmap2.put(ROOM_GAS, "9.20");
-//        list.add(hashmap2);
-//
-//        hashmap3.put(ROOM_NAME, "Room 4");
-//        hashmap3.put(ROOM_GAS, "5.20");
-//        list.add(hashmap3);
-//
-//        hashmap4.put(ROOM_NAME, "Room 5");
-//        hashmap4.put(ROOM_GAS, "1.20");
-//        list.add(hashmap4);
+        hashmap.put(ROOM_NAME, "Room 1");
+        hashmap.put(ROOM_GAS, "0.00");
+        list.add(hashmap);
+
+        hashmap1.put(ROOM_NAME, "Room 2");
+        hashmap1.put(ROOM_GAS, "1.00");
+        list.add(hashmap1);
+
+        hashmap2.put(ROOM_NAME, "Room 3");
+        hashmap2.put(ROOM_GAS, "9.20");
+        list.add(hashmap2);
+
+        hashmap3.put(ROOM_NAME, "Room 4");
+        hashmap3.put(ROOM_GAS, "5.20");
+        list.add(hashmap3);
+
+        hashmap4.put(ROOM_NAME, "Room 5");
+        hashmap4.put(ROOM_GAS, "1.20");
+        list.add(hashmap4);
     }
 }

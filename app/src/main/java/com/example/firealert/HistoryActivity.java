@@ -17,16 +17,19 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.firealert.API.ApiService;
 import com.example.firealert.Adapter.HistoryDataAdapter;
 import com.example.firealert.DAO.FireBaseHelper;
 import com.example.firealert.DTO.History;
 import com.example.firealert.DTO.User;
+import com.example.firealert.DTO.UserRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +39,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HistoryActivity extends AppCompatActivity {
     private ArrayList<HashMap<String,String>> list;
@@ -49,7 +56,6 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-
 
 
         list = new ArrayList<HashMap<String, String>>();
@@ -75,48 +81,72 @@ public class HistoryActivity extends AppCompatActivity {
 //
 //            }
 //        });
-        FireBaseHelper.getInstance().getHistory(User.getInstance().getHouse_id(), room_id, new FireBaseHelper.DataStatus() {
+        list.clear();
+        ApiService.apiService.getHistoryData().enqueue(new Callback<History>() {
             @Override
-            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
-                @SuppressWarnings("unchecked")
-                List<History> histories =  (List<History>) temp;
-                list.clear();
-                Collections.sort(histories, new Comparator<History>() {
-                    @Override
-                    public int compare(History o1, History o2) {
-                        Date date1 = null;
-                        Date date2 = null;
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:m");
-                            date1 = sdf.parse(o1.getDate());
-                            date2 = sdf.parse(o2.getDate());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        if (date1 != null && date2 != null) return - date1.compareTo(date2);
-                        return 0;
-                    }
-                });
+            public void onResponse(Call<History> call, Response<History> response) {
+                Toast.makeText(getApplicationContext(), "Call Api Success", Toast.LENGTH_SHORT).show();
+                History history = response.body();
+                Log.e("History Return", history.getId());
+                Log.e("History Return", String.valueOf(history.getValue()));
 
-
-                for (History history:histories)
-                {
-                    HashMap<String,String> hashMap = new HashMap<String,String>();
-                    String dates= history.getDate();
-                    String value= history.getValue()+"";
-                    hashMap.put(historyDataAdapter.DATE,dates);
-                    hashMap.put(historyDataAdapter.VALUE,value);
-                    list.add(hashMap);
-                }
-
-                lv_historydata.setAdapter((historyDataAdapter));
+//                HashMap<String,String> hashMap = new HashMap<String,String>();
+//                String dates= history.getDate();
+//                String value= history.getValue()+"";
+//                hashMap.put(historyDataAdapter.DATE,dates);
+//                hashMap.put(historyDataAdapter.VALUE,value);
+//                list.add(hashMap);
+//
+//                lv_historydata.setAdapter((historyDataAdapter));
             }
 
             @Override
-            public void dataIsSent() {
-
+            public void onFailure(Call<History> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Call Api Error", Toast.LENGTH_SHORT).show();
             }
         });
+//        FireBaseHelper.getInstance().getHistory(User.getInstance().getHouse_id(), room_id, new FireBaseHelper.DataStatus() {
+//            @Override
+//            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
+//                @SuppressWarnings("unchecked")
+//                List<History> histories =  (List<History>) temp;
+//                list.clear();
+//                Collections.sort(histories, new Comparator<History>() {
+//                    @Override
+//                    public int compare(History o1, History o2) {
+//                        Date date1 = null;
+//                        Date date2 = null;
+//                        try {
+//                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:m");
+//                            date1 = sdf.parse(o1.getDate());
+//                            date2 = sdf.parse(o2.getDate());
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                        }
+//                        if (date1 != null && date2 != null) return - date1.compareTo(date2);
+//                        return 0;
+//                    }
+//                });
+//
+//
+//                for (History history:histories)
+//                {
+//                    HashMap<String,String> hashMap = new HashMap<String,String>();
+//                    String dates= history.getDate();
+//                    String value= history.getValue()+"";
+//                    hashMap.put(historyDataAdapter.DATE,dates);
+//                    hashMap.put(historyDataAdapter.VALUE,value);
+//                    list.add(hashMap);
+//                }
+//
+//                lv_historydata.setAdapter((historyDataAdapter));
+//            }
+//
+//            @Override
+//            public void dataIsSent() {
+//
+//            }
+//        });
 
 
         historyDataAdapter= new HistoryDataAdapter(this,list);
@@ -174,7 +204,7 @@ public class HistoryActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot roomSnapshot: dataSnapshot.getChildren()) {
                     History history= roomSnapshot.getValue(History.class);
-                    if (history.getRoom_id().equals(room_id))
+                    if (history.getId().equals(room_id))
                     {
                         roomSnapshot.getRef().removeValue();
                     }
