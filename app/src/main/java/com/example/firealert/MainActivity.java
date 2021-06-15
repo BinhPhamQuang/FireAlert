@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         HousePath = path;
     }
 
-    public static void SetUpHouseDevice(){
-
+    public static void setHousePath(String path){
+        HousePath = path;
     }
 }

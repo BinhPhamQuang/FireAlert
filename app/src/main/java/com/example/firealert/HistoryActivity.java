@@ -21,6 +21,7 @@ import com.example.firealert.API.ApiService;
 import com.example.firealert.Adapter.HistoryDataAdapter;
 import com.example.firealert.DAO.FireBaseHelper;
 import com.example.firealert.DTO.History;
+import com.example.firealert.DTO.ListHistory;
 import com.example.firealert.DTO.User;
 import com.example.firealert.DTO.UserRequest;
 import com.google.firebase.database.DataSnapshot;
@@ -82,26 +83,27 @@ public class HistoryActivity extends AppCompatActivity {
 //            }
 //        });
         list.clear();
-        ApiService.apiService.getHistoryData().enqueue(new Callback<History>() {
+        ApiService.apiService.getListHistoryData().enqueue(new Callback<ListHistory>() {
             @Override
-            public void onResponse(Call<History> call, Response<History> response) {
+            public void onResponse(Call<ListHistory> call, Response<ListHistory> response) {
                 Toast.makeText(getApplicationContext(), "Call Api Success", Toast.LENGTH_SHORT).show();
-                History history = response.body();
-                Log.e("History Return", history.getId());
-                Log.e("History Return", String.valueOf(history.getValue()));
+                ListHistory histories = response.body();
+                List<History> result = histories.getResult();
 
-//                HashMap<String,String> hashMap = new HashMap<String,String>();
-//                String dates= history.getDate();
-//                String value= history.getValue()+"";
-//                hashMap.put(historyDataAdapter.DATE,dates);
-//                hashMap.put(historyDataAdapter.VALUE,value);
-//                list.add(hashMap);
-//
-//                lv_historydata.setAdapter((historyDataAdapter));
+                for (History history : result) {
+                    HashMap<String,String> hashMap = new HashMap<String,String>();
+                    String dates= history.getDate();
+                    String value= history.getValue()+"";
+                    hashMap.put(historyDataAdapter.DATE,dates);
+                    hashMap.put(historyDataAdapter.VALUE,value);
+                    list.add(hashMap);
+                }
+
+                lv_historydata.setAdapter((historyDataAdapter));
             }
 
             @Override
-            public void onFailure(Call<History> call, Throwable t) {
+            public void onFailure(Call<ListHistory> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Call Api Error", Toast.LENGTH_SHORT).show();
             }
         });

@@ -1,6 +1,7 @@
 package com.example.firealert.API;
 
 import com.example.firealert.DTO.History;
+import com.example.firealert.DTO.ListHistory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -17,5 +18,5 @@ public interface ApiService {
             .addConverterFactory(GsonConverterFactory.create(gson)).build().create(ApiService.class);
 
     @GET("/get-data/output.buzzer")
-    Call<History> getHistoryData();
+    Call<ListHistory> getListHistoryData();
 }
