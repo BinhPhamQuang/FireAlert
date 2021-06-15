@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
                                 path += "CSE";
                                 MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
                                         "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
-                                MainActivity.setHousePath("CSE");
                             }
                             else {
                                 MainActivity.SetUpServer("minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",
@@ -97,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                 path += "CSE";
                 MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
                         "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
-                MainActivity.setHousePath("CSE");
             }
             else {
                 MainActivity.SetUpServer("minhanhlhpx5", "aio_luee30ceekmTQiIGDRjAIf3RAxqw",

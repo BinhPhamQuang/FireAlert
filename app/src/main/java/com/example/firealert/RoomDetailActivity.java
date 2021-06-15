@@ -57,7 +57,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             }
         });
 
-        populateList();
+//        populateList();
         Intent getIntent = getIntent();
         list =  (ArrayList<HashMap<String,String>>) getIntent.getSerializableExtra("listRoom");
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -70,7 +70,6 @@ public class RoomDetailActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent= new Intent(RoomDetailActivity.this,HistoryActivity.class);
-
 
                 //send room_id here
                 intent.putExtra("room_id","0");

@@ -283,10 +283,6 @@ public class HomeActivity extends AppCompatActivity {
         btnRoomDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserRequest userRequest = new UserRequest("biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj");
-                Gson gson = new Gson();
-                String strJson = gson.toJson(userRequest);
-
                 Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
                 intent.putExtra("listRoom",list);
                 startActivity(intent);

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,30 +92,40 @@ public class HistoryActivity extends AppCompatActivity {
 //            }
 //        });
         list.clear();
-        ApiService.apiService.getListHistoryData().enqueue(new Callback<ListHistory>() {
-            @Override
-            public void onResponse(Call<ListHistory> call, Response<ListHistory> response) {
-                Toast.makeText(getApplicationContext(), "Call Api Success", Toast.LENGTH_SHORT).show();
-                ListHistory histories = response.body();
-                List<History> result = histories.getResult();
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("username", "biennguyenbk00");
+            postData.put("key", "aio_iboi96HqYYZyzroSlH4yp6byPKCj");
 
-                for (History history : result) {
-                    HashMap<String,String> hashMap = new HashMap<String,String>();
-                    String dates= history.getDate();
-                    String value= history.getValue()+"";
-                    hashMap.put(historyDataAdapter.DATE,dates);
-                    hashMap.put(historyDataAdapter.VALUE,value);
-                    list.add(hashMap);
-                }
-
-                lv_historydata.setAdapter((historyDataAdapter));
-            }
-
-            @Override
-            public void onFailure(Call<ListHistory> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Call Api Error", Toast.LENGTH_SHORT).show();
-            }
-        });
+            new SendDeviceDetails().execute("https://firealert-api.herokuapp.com/get-data/output.buzzer", postData.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//        UserRequest userRequest = new UserRequest("biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj");
+//        ApiService.apiService.getListHistoryData("biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj").enqueue(new Callback<ListHistory>() {
+//            @Override
+//            public void onResponse(Call<ListHistory> call, Response<ListHistory> response) {
+//                Toast.makeText(getApplicationContext(), "Call Api Success", Toast.LENGTH_SHORT).show();
+//                ListHistory histories = response.body();
+//                List<History> result = histories.getResult();
+//
+//                for (History history : result) {
+//                    HashMap<String,String> hashMap = new HashMap<String,String>();
+//                    String dates= history.getDate();
+//                    String value= history.getValue()+"";
+//                    hashMap.put(historyDataAdapter.DATE,dates);
+//                    hashMap.put(historyDataAdapter.VALUE,value);
+//                    list.add(hashMap);
+//                }
+//
+//                lv_historydata.setAdapter((historyDataAdapter));
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ListHistory> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "Call Api Error", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 //        FireBaseHelper.getInstance().getHistory(User.getInstance().getHouse_id(), room_id, new FireBaseHelper.DataStatus() {
 //            @Override
 //            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
@@ -293,5 +312,52 @@ public class HistoryActivity extends AppCompatActivity {
         list.add(hashMap1);
         list.add(hashMap2);
         list.add(hashMap3);
+    }
+}
+
+class SendDeviceDetails extends AsyncTask<String, Void, String> {
+
+    @Override
+    protected String doInBackground(String... params) {
+
+        String data = "";
+
+        HttpURLConnection httpURLConnection = null;
+        try {
+
+            httpURLConnection = (HttpURLConnection) new URL(params[0]).openConnection();
+            httpURLConnection.setRequestMethod("GET");
+
+            httpURLConnection.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+            wr.writeBytes("PostData=" + params[1]);
+            wr.flush();
+            wr.close();
+
+            InputStream in = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+
+            int inputStreamData = inputStreamReader.read();
+            while (inputStreamData != -1) {
+                char current = (char) inputStreamData;
+                inputStreamData = inputStreamReader.read();
+                data += current;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+        }
+
+        return data;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+        Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
     }
 }
