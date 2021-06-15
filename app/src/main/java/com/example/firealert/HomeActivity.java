@@ -63,7 +63,9 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
+
     private String address, phone, username;
+
     public static CardView badge;
     public static String GasConcentration;
     MQTTService mqttServiceGet;

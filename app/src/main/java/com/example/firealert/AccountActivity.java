@@ -32,9 +32,11 @@ public class AccountActivity extends AppCompatActivity {
     ImageButton btn_back;
     ViewPageAdapter viewPageAdapter;
     TabLayout tab_layout;
+
     MQTTService mqttServiceGet;
     MQTTService mqttServiceSend;
     String address, phone, username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

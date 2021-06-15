@@ -86,7 +86,9 @@ public class SettingsActivity extends AppCompatActivity {
         rl_privacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getApplicationContext(),PrivacyActivity.class);
+                Intent intent= new Intent(getApplicationContext(), PrivacyActivity.class);
+                intent.putExtra("address", address);
+                intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
                 startActivity(intent);
             }
@@ -97,8 +99,9 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 

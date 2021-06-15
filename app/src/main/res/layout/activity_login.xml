@@ -106,12 +106,12 @@
             android:layout_below="@id/password_inputlayout"
             >
             <TextView
+                android:id="@+id/txt_forgottenPassword"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Forgot password ?"
-                android:id="@+id/btn_forgetpassword"
+                android:text="Forgotten password ?"
                 android:textColor="@color/dark"
                 android:textSize="18dp"
 
