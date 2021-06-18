@@ -168,23 +168,4 @@ public class RoomDetailActivity extends AppCompatActivity {
 
     }
 
-    private void populateList() {
-        list = new ArrayList<HashMap<String, String>>();
-
-        HashMap<String,String> hashmap2 = new HashMap<String,String>();
-        hashmap2.put(ROOM_NAME, "Room 1");
-        hashmap2.put(GAS, "0.00");
-        list.add(hashmap2);
-
-        HashMap<String,String> hashmap = new HashMap<String,String>();
-        hashmap.put(ROOM_NAME, "Room 2");
-        hashmap.put(GAS, "1.00");
-        list.add(hashmap);
-
-        HashMap<String,String> hashmap1 = new HashMap<String,String>();
-        hashmap1.put(ROOM_NAME, "Room 3");
-        hashmap1.put(GAS, "9.20");
-        list.add(hashmap1);
-
-    }
 }

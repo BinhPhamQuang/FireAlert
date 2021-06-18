@@ -72,9 +72,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-                                return;
                             }
-                            startActivity(new Intent(getApplicationContext(), VerifyEmailActivity.class));
+
                             finish();
                         }
                     })
@@ -108,25 +107,39 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            if (isEmailVerified()) {
-                String path = "";
-                if(FirebaseAuth.getInstance().getCurrentUser().getEmail().equals("cse@hcmut.edu.vn")){
-                    path += "CSE";
-                    MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
-                            "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
-                    MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
-                            "biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj",path);
-                }
-                else {
-                    MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
-                            "minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",path);
-                }
-
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+//            if (isEmailVerified()) {
+//                String path = "";
+//                if(FirebaseAuth.getInstance().getCurrentUser().getEmail().equals("cse@hcmut.edu.vn")){
+//                    path += "CSE";
+//                    MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
+//                            "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
+//                    MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+//                            "biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj",path);
+//                }
+//                else {
+//                    MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+//                            "minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",path);
+//                }
+//
+//                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+//            }
+//            else {
+//                startActivity(new Intent(getApplicationContext(), VerifyEmailActivity.class));
+//            }
+            String path = "";
+            if(FirebaseAuth.getInstance().getCurrentUser().getEmail().equals("cse@hcmut.edu.vn")){
+                path += "CSE";
+                MainActivity.SetUpServer("CSE_BBC1", "aio_VhCE38mvogdpc353vHMQl684Emfs",
+                        "CSE_BBC", "aio_qyBr29pmfJC09tUFB5n9Ap9AtIwD",path);
+                MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+                        "biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj",path);
             }
             else {
-                startActivity(new Intent(getApplicationContext(), VerifyEmailActivity.class));
+                MainActivity.SetUpServer("minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",
+                        "minhanhlhpx5", "aio_vmMk58XXUXgMXEPKq5JnjggZR0Xl",path);
             }
+
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             finish();
         }
     }

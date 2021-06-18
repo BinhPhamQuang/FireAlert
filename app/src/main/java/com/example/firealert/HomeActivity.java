@@ -1,6 +1,7 @@
 package com.example.firealert;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Adapter.HomeAdapter;
+import com.example.firealert.DAO.FireBaseHelper;
 import com.example.firealert.DTO.Room;
 import com.example.firealert.DTO.UserData;
 import com.example.firealert.DTO.UserRequest;
@@ -45,6 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     ImageButton btnAddRoom;
@@ -72,6 +76,12 @@ public class HomeActivity extends AppCompatActivity {
     public static String GasConcentration;
     MQTTService mqttServiceGet;
     MQTTService mqttServiceSend;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +129,90 @@ public class HomeActivity extends AppCompatActivity {
             int extra = getIntent().getIntExtra("notification", 1);
             badge.setVisibility(extra);
         }
+        try {
+            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
+            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
+            //AddItemsToRecyclerViewArrayList();
+        }
+        catch (MqttException e) {
+            e.printStackTrace();
+        }
+        mqttServiceGet.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+                Toast.makeText(getApplicationContext(),"Can't connect to server get", Toast.LENGTH_SHORT).show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
+                int indexTopic = 0;
+                for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
+                    if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
+                        indexTopic = i;
+                    }
+                }
+
+                list.get(indexTopic).put("2",mess.get("data"));
+                adapter.notifyDataSetChanged();
+                if (Float.parseFloat(mess.get("data")) == 1)
+                {
+                    Log.d("Message Arrived: ", topic);
+                    String GasConcentration = mess.get("data");
+                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
+                        mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
+                        mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
+                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
+                        // change this value for send data to another activity
+                        intent.putExtra("room_name", mqttServiceSend.rooms.get(indexTopic));
+                        //--------------------------------------------
+                        intent.putExtra("value", mess.get("data"));
+                        // must change this value by room_id
+                        intent.putExtra("indexTopic",indexTopic);
+                        startActivity(intent);
+                    }
+                }
+                else {
+                    HomeActivity.badge.setVisibility(View.INVISIBLE);
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
+                    mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM_OFF,mqttServiceSend.drvTopic.get(indexTopic));
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+
+        mqttServiceSend.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+                Toast.makeText(getApplicationContext(),"Can't connect to server send", Toast.LENGTH_SHORT).show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+
+            }
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
 
 
         Date currentTime = Calendar.getInstance().getTime();
@@ -182,94 +276,43 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        try {
-
-            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
-            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
-        }
-        catch (MqttException e) {
-            e.printStackTrace();
-        }
-
-        mqttServiceGet.setCallback(new MqttCallbackExtended() {
+        ImageButton btnRoomDetail = (ImageButton) findViewById(R.id.btnRoomDetail);
+        btnRoomDetail.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
+            public void onClick(View v) {
+                Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
 
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-                Toast.makeText(getApplicationContext(),"Can't connect to server get", Toast.LENGTH_SHORT).show();
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-                Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
-
-                System.out.println(mess);
-                String data = mess.get("data");
-
-
-                int indexTopic = 0;
-                for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
-                    if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
-                        indexTopic = i;
-                    }
-                }
-                if (data.equals("1")) {
-                    Log.d("Message Arrived: ", topic);
-                    GasConcentration = mess.get("data");
-                    if(badge.getVisibility() == View.INVISIBLE) {
-                        mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
-                        mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
-                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
-                        // change this value for send data to another activity
-                        intent.putExtra("room_name", mqttServiceGet.rooms.get(indexTopic));
-                        //--------------------------------------------
-                        intent.putExtra("value", mess.get("data"));
-                        // must change this value by room_id
-                        intent.putExtra("indexTopic",indexTopic);
-                        startActivity(intent);
-                    }
-                }
-                else {
-                    badge.setVisibility(View.INVISIBLE);
-                    mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
-                    mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
-                    mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM_OFF,mqttServiceSend.drvTopic.get(indexTopic));
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
-        mqttServiceSend.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-                Toast.makeText(getApplicationContext(),"Can't connect to server send", Toast.LENGTH_SHORT).show();
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-            }
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
+                intent.putExtra("listRoom",list);
+                startActivity(intent);
             }
         });
 
         AddItemsToRecyclerViewArrayList();
+        FireBaseHelper.getInstance().getHouseDevice(MainActivity.HousePath, new FireBaseHelper.DataStatus() {
+            @Override
+            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
+                List<Room> lst =  (List<Room>) temp;
+                int i = 0;
+                for(Room dataRoom: lst){
+                    if (i == 0) {
+
+                        list.get(0).put("1", dataRoom.name);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        HashMap<String, String> hashmap = new HashMap<String, String>();
+                        hashmap.put(ROOM_NAME, dataRoom.name);
+                        hashmap.put(ROOM_GAS, "0");
+                        list.add(hashmap);
+                        adapter.notifyDataSetChanged();
+                    }
+                    i++;
+                }
+            }
+            @Override
+            public void dataIsSent() {
+
+            }
+        });
 
         //        __ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
@@ -281,18 +324,6 @@ public class HomeActivity extends AppCompatActivity {
                 HomeActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(HorizontalLayout);
         recyclerView.setAdapter(adapter);
-//        __ END OF THIS PART
-
-        ImageButton btnRoomDetail = (ImageButton) findViewById(R.id.btnRoomDetail);
-        btnRoomDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
-                intent.putExtra("listRoom",list);
-                startActivity(intent);
-            }
-        });
-
 
     }
 
@@ -341,30 +372,8 @@ public class HomeActivity extends AppCompatActivity {
 //            hashmap.put(ROOM_GAS, "0");
 //            list.add(hashmap);
 //        }
-        HashMap<String,String> hashmap = new HashMap<String,String>();
-        HashMap<String,String> hashmap1 = new HashMap<String,String>();
-        HashMap<String,String> hashmap2 = new HashMap<String,String>();
-        HashMap<String,String> hashmap3 = new HashMap<String,String>();
-        HashMap<String,String> hashmap4 = new HashMap<String,String>();
 
-        hashmap.put(ROOM_NAME, "Room 1");
-        hashmap.put(ROOM_GAS, "0.00");
-        list.add(hashmap);
 
-        hashmap1.put(ROOM_NAME, "Room 2");
-        hashmap1.put(ROOM_GAS, "1.00");
-        list.add(hashmap1);
-
-        hashmap2.put(ROOM_NAME, "Room 3");
-        hashmap2.put(ROOM_GAS, "9.20");
-        list.add(hashmap2);
-
-        hashmap3.put(ROOM_NAME, "Room 4");
-        hashmap3.put(ROOM_GAS, "5.20");
-        list.add(hashmap3);
-
-        hashmap4.put(ROOM_NAME, "Room 5");
-        hashmap4.put(ROOM_GAS, "1.20");
-        list.add(hashmap4);
     }
+
 }

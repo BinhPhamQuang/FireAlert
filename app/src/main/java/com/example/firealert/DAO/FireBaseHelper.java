@@ -88,7 +88,7 @@ public class FireBaseHelper {
     public void getHouseDevice(String house_name,final DataStatus dataStatus)
     {
         List<Room> lst= new ArrayList<>();
-        rff =  firebaseDatabase.getReference("House").child("CSE");
+        rff =  firebaseDatabase.getReference("House").child(house_name);
         rff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -11,6 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -20,6 +21,6 @@ public interface ApiService {
             .baseUrl("https://firealert-api.herokuapp.com")
             .addConverterFactory(GsonConverterFactory.create(gson)).build().create(ApiService.class);
 
-    @GET("/get-data/output.buzzer")
-    Call<ListHistory> getListHistoryData(@Query("username") String username, @Query("key") String key);
+    @GET("/get-data/output.buzzer/{username}/{key}")
+    Call<ListHistory> getListHistoryData(@Path("username") String username, @Path("key") String key);
 }
