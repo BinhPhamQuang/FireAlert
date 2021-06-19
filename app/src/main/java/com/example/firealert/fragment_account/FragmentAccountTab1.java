@@ -29,24 +29,26 @@ public class FragmentAccountTab1 extends Fragment {
     private String username;
     private String phone;
     private String address;
+    private String houseId;
     EditText nameEditText;
     EditText addressEditText;
     EditText phoneEditText;
     Button btnSave;
     TextView textView;
 
-    public FragmentAccountTab1(String userId, String email, String username, String phone, String address) {
+    public FragmentAccountTab1(String userId, String email, String username, String phone, String address, String houseId) {
         this.userId = userId;
         this.email = email;
         this.username = username;
         this.phone = phone;
         this.address = address;
+        this.houseId = houseId;
     }
 
-    public static FragmentAccountTab1 getInstance(String userId, String email, String username, String phone, String address)
+    public static FragmentAccountTab1 getInstance(String userId, String email, String username, String phone, String address, String houseId)
     {
         FragmentAccountTab1 fragmentAccountTab1;
-        fragmentAccountTab1 = new FragmentAccountTab1(userId, email, username, phone, address);
+        fragmentAccountTab1 = new FragmentAccountTab1(userId, email, username, phone, address, houseId);
         return fragmentAccountTab1;
     }
 

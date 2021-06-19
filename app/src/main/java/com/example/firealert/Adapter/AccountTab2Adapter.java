@@ -1,5 +1,6 @@
 package com.example.firealert.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,10 @@ public class AccountTab2Adapter extends BaseAdapter {
         this.list = list;
     }
 
+    public ArrayList<HashMap<String, String>> getList() {
+        return this.list;
+    }
+
     @Override
     public int getCount() {
         return list.size();
@@ -40,31 +45,23 @@ public class AccountTab2Adapter extends BaseAdapter {
         return 0;
     }
 
-    private class ViewHolder {
-        TextView tv_name;
-        TextView tv_mail;
-    }
-
+    @SuppressLint({"ViewHolder", "InflateParams"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        AccountTab2Adapter.ViewHolder holder;
-
-        LayoutInflater inflater = activity.getLayoutInflater();
+        View row;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.object_account_tab2, null);
-            holder = new AccountTab2Adapter.ViewHolder();
-            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-            holder.tv_mail = (TextView) convertView.findViewById(R.id.tv_mail);
-            convertView.setTag(holder);
-        } else {
-            holder = (AccountTab2Adapter.ViewHolder) convertView.getTag();
+            LayoutInflater inflater = activity.getLayoutInflater();
+            row = inflater.inflate(R.layout.object_account_tab2, parent, false);
+        }
+        else {
+            row = convertView;
         }
 
-        HashMap<String, String> map = list.get(position);
-        holder.tv_name.setText(map.get(ACCOUNT_NAME));
-        holder.tv_mail.setText(map.get(ACCOUNT_MAIL));
-
-        return convertView;
+        TextView tvEmail = row.findViewById(R.id.tv_mail);
+        TextView tvName = row.findViewById(R.id.tv_name);
+        tvEmail.setText(list.get(position).get(ACCOUNT_MAIL));
+        tvName.setText(list.get(position).get(ACCOUNT_NAME));
+        return row;
     }
 }
 

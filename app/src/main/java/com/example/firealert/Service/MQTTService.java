@@ -21,13 +21,19 @@ public class MQTTService {
 //    final String subscriptionTopic ="minhanhlhpx5/feeds/gas-concentration";
 //    final String username="minhanhlhpx5";
 //    final String password="aio_luee30ceekmTQiIGDRjAIf3RAxqw";
-    final String username="biennguyenbk00";
-    final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
+//    final String username="biennguyenbk00";
+//    final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
+    String username;
+    String password;
 
-    public final String[] gasTopic ={"biennguyenbk00/feeds/gas","biennguyenbk00/feeds/gas2"};
-    public final String[] drvTopic ={"biennguyenbk00/feeds/output.drv","biennguyenbk00/feeds/output.drv2"};
-    public final String[] ledTopic ={"biennguyenbk00/feeds/output.led","biennguyenbk00/feeds/output.led2"};
-    public final String[] buzzerTopic ={"biennguyenbk00/feeds/output.buzzer","biennguyenbk00/feeds/output.buzzer2"};
+//    public final String[] gasTopic ={"biennguyenbk00/feeds/gas","biennguyenbk00/feeds/gas2"};
+//    public final String[] drvTopic ={"biennguyenbk00/feeds/output.drv","biennguyenbk00/feeds/output.drv2"};
+//    public final String[] ledTopic ={"biennguyenbk00/feeds/output.led","biennguyenbk00/feeds/output.led2"};
+//    public final String[] buzzerTopic ={"biennguyenbk00/feeds/output.buzzer","biennguyenbk00/feeds/output.buzzer2"};
+    public final String[] gasTopic ={"buitandanh1612/feeds/gas"};
+    public final String[] drvTopic ={"buitandanh1612/feeds/drv"};
+    public final String[] ledTopic ={"buitandanh1612/feeds/led"};
+    public final String[] buzzerTopic ={"buitandanh1612/feeds/buzzer"};
 
     public final String[] rooms ={"Living room","Kitchen"};
 
@@ -40,7 +46,9 @@ public class MQTTService {
     public final String DRV_PWM_OFF = "[\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"0\",\"unit\":\"\"]";
 
     public MqttAndroidClient mqttAndroidClient;
-    public MQTTService(Context context) throws MqttException {
+    public MQTTService(Context context, String username, String password) throws MqttException {
+        this.username = username;
+        this.password = password;
         mqttAndroidClient = new MqttAndroidClient(context,serverUri,clientID);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override

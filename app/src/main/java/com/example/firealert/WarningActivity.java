@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.DAO.FireBaseHelper;
+import com.example.firealert.DTO.AdafruitAccount;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.Confirm;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
@@ -64,10 +65,8 @@ public class WarningActivity extends AppCompatActivity {
         });
         loadValueInfo();
 
-
-
         try {
-            mqttService = new MQTTService(this);
+            mqttService = new MQTTService(this, getIntent().getStringExtra("adafruitUsername"), getIntent().getStringExtra("adafruitPassword"));
         } catch (MqttException e) {
             e.printStackTrace();
         }

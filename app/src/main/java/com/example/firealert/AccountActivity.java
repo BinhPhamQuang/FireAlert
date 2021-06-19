@@ -27,8 +27,7 @@ public class AccountActivity extends AppCompatActivity {
     ImageButton btn_back;
     ViewPageAdapter viewPageAdapter;
     TabLayout tab_layout;
-    MQTTService mqttService;
-    String userId, email, address, phone, username;
+    String userId, email, address, phone, username, houseId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +41,7 @@ public class AccountActivity extends AppCompatActivity {
         address = getIntent().getStringExtra("address");
         phone = getIntent().getStringExtra("phone");
         username = getIntent().getStringExtra("username");
+        houseId = getIntent().getStringExtra("houseId");
 
         getTab();
 
@@ -53,48 +53,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        try {
-            mqttService = new MQTTService(this);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        mqttService.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
 
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if (Float.parseFloat(message.toString()) >= 10) {
-                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
-//                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-//                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
-                        mqttService.sendDataMQTT(mqttService.SPEAKER, "biennguyenbk00/feeds/output.buzzer");
-                        mqttService.sendDataMQTT(mqttService.LED, "biennguyenbk00/feeds/output.led");
-                        Intent intent = new Intent(AccountActivity.this, WarningActivity.class);
-                        // change this value for send data to another activity
-                        intent.putExtra("room_name", "Room 1");
-                        //--------------------------------------------
-                        intent.putExtra("value", message.toString());
-                        startActivity(intent);
-                    }
-                }
-                else {
-                    HomeActivity.badge.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
     }
     private void getTab()
     {
@@ -102,8 +61,8 @@ public class AccountActivity extends AppCompatActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                viewPageAdapter.addFragment(FragmentAccountTab1.getInstance(userId, email, username, phone, address),"Information");
-                viewPageAdapter.addFragment(FragmentAccountTab2.getInstance(),"Account");
+                viewPageAdapter.addFragment(FragmentAccountTab1.getInstance(userId, email, username, phone, address, houseId),"Information");
+                viewPageAdapter.addFragment(FragmentAccountTab2.getInstance(houseId),"Account");
                 viewPager.setAdapter(viewPageAdapter);
                 tab_layout.setupWithViewPager(viewPager);
             }

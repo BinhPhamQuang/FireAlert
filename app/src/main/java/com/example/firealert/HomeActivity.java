@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firealert.Adapter.HomeAdapter;
+import com.example.firealert.DTO.AdafruitAccount;
 import com.example.firealert.DTO.UserData;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
@@ -56,10 +57,8 @@ public class HomeActivity extends AppCompatActivity {
     HomeAdapter adapter;
     LinearLayoutManager HorizontalLayout;
 
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
-    private DatabaseReference databaseReference;
-    private String userId, email, address, phone, username;
+    private String userId, email, address, phone, username, houseId;
+    private AdafruitAccount adafruitAccount = new AdafruitAccount();
 
     public static CardView badge;
     public static String GasConcentration;
@@ -74,29 +73,6 @@ public class HomeActivity extends AppCompatActivity {
         txtWelcome = (TextView) findViewById(R.id.tv_welcome);
         btnNotification = (ImageButton) findViewById(R.id.btnNotification);
         ll_close_layout =findViewById(R.id.ll_close_layout);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("User").child(firebaseUser.getUid());
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserData user = snapshot.getValue(UserData.class);
-                assert user != null;
-                userId = user.getUser_id();
-                email = user.getEmail();
-                username = user.getUsername();
-                address = user.getAddress();
-                phone = user.getPhone();
-                String[] name = username.split(" ");
-                txtWelcome.setText(String.format("Welcome %s !", name[name.length - 1]));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HomeActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         ll_close_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +107,8 @@ public class HomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
                     intent.putExtra("room_name", "Room 1");
                     intent.putExtra("value", GasConcentration);
+                    intent.putExtra("adafruitUsername", adafruitAccount.getUsername());
+                    intent.putExtra("adafruitPassword", adafruitAccount.getPassword());
                     startActivity(intent);
                 }
             }
@@ -156,6 +134,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("username", username);
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
+                intent.putExtra("houseId", houseId);
                 startActivity(intent);
             }
         });
@@ -180,9 +159,6 @@ public class HomeActivity extends AppCompatActivity {
 
         //__ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-
-
-
         RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(RecyclerViewLayoutManager);
         AddItemsToRecyclerViewArrayList();
@@ -193,8 +169,60 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         //__ END OF THIS PART
 
+        readUserData(new FirebaseCallback() {
+            @Override
+            public void onCallback() {
+                readAdafruitAccount(new FirebaseCallback() {
+                    @Override
+                    public void onCallback() {
+                        setCallbackMQTT();
+                    }
+                });
+            }
+        });
+    }
+
+
+    public void AddItemsToRecyclerViewArrayList()
+    {
+        // Adding items to ArrayList
+        list = new ArrayList<HashMap<String, String>>();
+
+        HashMap<String,String> hashmap = new HashMap<String,String>();
+        HashMap<String,String> hashmap1 = new HashMap<String,String>();
+        HashMap<String,String> hashmap2 = new HashMap<String,String>();
+        HashMap<String,String> hashmap3 = new HashMap<String,String>();
+        HashMap<String,String> hashmap4 = new HashMap<String,String>();
+
+        hashmap.put(ROOM_NAME, "Room 1");
+        hashmap.put(ROOM_GAS, "0.00");
+        list.add(hashmap);
+
+        hashmap1.put(ROOM_NAME, "Room 2");
+        hashmap1.put(ROOM_GAS, "1.00");
+        list.add(hashmap1);
+
+        hashmap2.put(ROOM_NAME, "Room 3");
+        hashmap2.put(ROOM_GAS, "9.20");
+        list.add(hashmap2);
+
+        hashmap3.put(ROOM_NAME, "Room 4");
+        hashmap3.put(ROOM_GAS, "5.20");
+        list.add(hashmap3);
+
+        hashmap4.put(ROOM_NAME, "Room 5");
+        hashmap4.put(ROOM_GAS, "1.20");
+        list.add(hashmap4);
+    }
+
+
+    private interface FirebaseCallback {
+        void onCallback();
+    }
+
+    private void setCallbackMQTT() {
         try {
-            mqttService = new MQTTService(this);
+            mqttService = new MQTTService(this, adafruitAccount.getUsername(), adafruitAccount.getPassword());
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -234,6 +262,8 @@ public class HomeActivity extends AppCompatActivity {
                         intent.putExtra("value", message.toString());
                         // must change this value by room_id
                         intent.putExtra("indexTopic",indexTopic);
+                        intent.putExtra("adafruitUsername", adafruitAccount.getUsername());
+                        intent.putExtra("adafruitPassword", adafruitAccount.getPassword());
                         startActivity(intent);
                     }
                 }
@@ -255,38 +285,54 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
-    public void AddItemsToRecyclerViewArrayList()
-    {
-        // Adding items to ArrayList
-        list = new ArrayList<HashMap<String, String>>();
+    private void readAdafruitAccount(FirebaseCallback firebaseCallback) {
+        DatabaseReference accountReference = FirebaseDatabase.getInstance().getReference("House").child(houseId).child("adafruit_account");
+        accountReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                AdafruitAccount account = snapshot.getValue(AdafruitAccount.class);
+                if (account != null) {
+                    adafruitAccount.setUsername(account.getUsername());
+                    adafruitAccount.setPassword(account.getPassword());
+                    firebaseCallback.onCallback();
+                }
 
-        HashMap<String,String> hashmap = new HashMap<String,String>();
-        HashMap<String,String> hashmap1 = new HashMap<String,String>();
-        HashMap<String,String> hashmap2 = new HashMap<String,String>();
-        HashMap<String,String> hashmap3 = new HashMap<String,String>();
-        HashMap<String,String> hashmap4 = new HashMap<String,String>();
+            }
 
-        hashmap.put(ROOM_NAME, "Room 1");
-        hashmap.put(ROOM_GAS, "0.00");
-        list.add(hashmap);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        hashmap1.put(ROOM_NAME, "Room 2");
-        hashmap1.put(ROOM_GAS, "1.00");
-        list.add(hashmap1);
-
-        hashmap2.put(ROOM_NAME, "Room 3");
-        hashmap2.put(ROOM_GAS, "9.20");
-        list.add(hashmap2);
-
-        hashmap3.put(ROOM_NAME, "Room 4");
-        hashmap3.put(ROOM_GAS, "5.20");
-        list.add(hashmap3);
-
-        hashmap4.put(ROOM_NAME, "Room 5");
-        hashmap4.put(ROOM_GAS, "1.20");
-        list.add(hashmap4);
+            }
+        });
     }
+
+    private void readUserData(FirebaseCallback firebaseCallback) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User").child(firebaseUser.getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserData user = snapshot.getValue(UserData.class);
+                assert user != null;
+                userId = user.getUser_id();
+                email = user.getEmail();
+                username = user.getUsername();
+                address = user.getAddress();
+                phone = user.getPhone();
+                houseId = user.getHouse_id();
+                String[] name = username.split(" ");
+                txtWelcome.setText(String.format("Welcome %s !", name[name.length - 1]));
+                firebaseCallback.onCallback();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(HomeActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

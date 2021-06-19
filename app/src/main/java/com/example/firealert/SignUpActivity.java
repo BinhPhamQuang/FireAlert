@@ -133,6 +133,7 @@ public class SignUpActivity extends AppCompatActivity {
                             userInformation.put("username", name);
                             userInformation.put("address", address);
                             userInformation.put("phone", phone);
+                            userInformation.put("house_id", "default");
                             databaseReference.setValue(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {

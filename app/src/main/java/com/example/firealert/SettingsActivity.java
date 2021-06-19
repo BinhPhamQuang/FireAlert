@@ -32,9 +32,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class SettingsActivity extends AppCompatActivity {
     TextView helloTextView;
-    Button btnSignOut;
-    MQTTService mqttService;
-    private String userId, email, address, phone, username;
+    private String userId, email, address, phone, username, houseId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         phone = getIntent().getStringExtra("phone");
         address = getIntent().getStringExtra("address");
+        houseId = getIntent().getStringExtra("houseId");
         helloTextView.setText(String.format("Hello %s!", username));
 
         ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
@@ -67,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
+                intent.putExtra("houseId", houseId);
                 startActivity(intent);
             }
         });
@@ -90,6 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
+                intent.putExtra("houseId", houseId);
                 startActivity(intent);
             }
         });
@@ -102,51 +103,6 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-            }
-        });
-
-
-        try {
-            mqttService = new MQTTService(this);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        mqttService.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if ( Float.parseFloat(message.toString()) >= 10)
-                {
-                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
-//                        mqttService.sendDataMQTT("1000", "biennguyenbk00/feeds/output.buzzer");
-//                        mqttService.sendDataMQTT("1", "biennguyenbk00/feeds/output.led");
-                        mqttService.sendDataMQTT(mqttService.SPEAKER, "biennguyenbk00/feeds/output.buzzer");
-                        mqttService.sendDataMQTT(mqttService.LED, "biennguyenbk00/feeds/output.led");
-                        Intent intent = new Intent(SettingsActivity.this, WarningActivity.class);
-                        // change this value for send data to another activity
-                        intent.putExtra("room_name", "Room 1");
-                        //--------------------------------------------
-                        intent.putExtra("value", message.toString());
-                        startActivity(intent);
-                    }
-                }
-                else {
-                    HomeActivity.badge.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
             }
         });
     }
