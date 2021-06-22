@@ -4,11 +4,11 @@ public class History {
     private String date;
     private String id;
     private String name;
-    private float value;
+    private String value;
 
     public  History()
     {}
-    public History(String date, String id, String name, float value) {
+    public History(String date, String id, String name, String value) {
         this.date = date;
         this.id = id;
         this.name = name;
@@ -27,8 +27,8 @@ public class History {
         return id;
     }
 
-    public void setId(String room_id) {
-        this.id = room_id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -39,11 +39,11 @@ public class History {
         this.name = name;
     }
 
-    public float getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }

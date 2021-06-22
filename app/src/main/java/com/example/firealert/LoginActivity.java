@@ -146,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isValidatedInformation(String username, String password) {
         if (username.isEmpty()) {
-            emailLayout.setError("Username is empty!");
+            emailLayout.setError("Email is empty!");
             return false;
         }
         else {

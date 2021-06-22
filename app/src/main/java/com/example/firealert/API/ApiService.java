@@ -2,7 +2,6 @@ package com.example.firealert.API;
 
 import com.example.firealert.DTO.History;
 import com.example.firealert.DTO.ListHistory;
-import com.example.firealert.DTO.UserRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -21,6 +20,6 @@ public interface ApiService {
             .baseUrl("https://firealert-api.herokuapp.com")
             .addConverterFactory(GsonConverterFactory.create(gson)).build().create(ApiService.class);
 
-    @GET("/get-data/output.buzzer/{username}/{key}")
-    Call<ListHistory> getListHistoryData(@Path("username") String username, @Path("key") String key);
+    @GET("/get-data/{feedname}/{username}/{key}")
+    Call<ListHistory> getListHistoryData(@Path("feedname") String feedname, @Path("username") String username, @Path("key") String key);
 }

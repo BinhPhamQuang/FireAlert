@@ -76,7 +76,7 @@ public class FireBaseHelper {
         LocalDateTime now = LocalDateTime.now();
         String key= rff.push().getKey();
         String currentDate=dtf.format(now).toString();
-        History history= new History(currentDate, User.getInstance().getHouse_id(),room_id,value);
+        History history= new History(currentDate, User.getInstance().getHouse_id(),room_id,String.valueOf(value));
         rff.child(key).setValue(history).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

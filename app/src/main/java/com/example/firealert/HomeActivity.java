@@ -23,7 +23,6 @@ import com.example.firealert.Adapter.HomeAdapter;
 import com.example.firealert.DAO.FireBaseHelper;
 import com.example.firealert.DTO.Room;
 import com.example.firealert.DTO.UserData;
-import com.example.firealert.DTO.UserRequest;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
 import com.google.firebase.auth.FirebaseAuth;

@@ -24,7 +24,6 @@ import com.example.firealert.DAO.FireBaseHelper;
 import com.example.firealert.DTO.History;
 import com.example.firealert.DTO.ListHistory;
 import com.example.firealert.DTO.User;
-import com.example.firealert.DTO.UserRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,6 +58,7 @@ public class HistoryActivity extends AppCompatActivity {
     private HistoryDataAdapter historyDataAdapter;
     private ListView lv_historydata;
     private String room_id;
+    private String room_topic;
     FirebaseDatabase firebaseDatabase= FirebaseDatabase.getInstance();
     DatabaseReference reff;
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -70,6 +70,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         list = new ArrayList<HashMap<String, String>>();
         room_id= getIntent().getStringExtra("room_id");
+        room_topic= getIntent().getStringExtra("room_topic");
         reff= firebaseDatabase.getReference();
 
 
@@ -92,7 +93,9 @@ public class HistoryActivity extends AppCompatActivity {
 //            }
 //        });
         list.clear();
-        ApiService.apiService.getListHistoryData("biennguyenbk00", "aio_iboi96HqYYZyzroSlH4yp6byPKCj").enqueue(new Callback<ListHistory>() {
+
+        String feedname = room_topic.substring(room_topic.lastIndexOf("/") + 1);
+        ApiService.apiService.getListHistoryData(feedname, MainActivity.Server_username_get, MainActivity.Server_password_get).enqueue(new Callback<ListHistory>() {
             @Override
             public void onResponse(Call<ListHistory> call, Response<ListHistory> response) {
                 Toast.makeText(getApplicationContext(), "Call Api Success", Toast.LENGTH_SHORT).show();

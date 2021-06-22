@@ -18,7 +18,6 @@ import com.example.firealert.API.ApiService;
 import com.example.firealert.Adapter.HistoryDataAdapter;
 import com.example.firealert.Adapter.RoomDetailAdapter;
 import com.example.firealert.DTO.History;
-import com.example.firealert.DTO.UserRequest;
 import com.example.firealert.Service.MQTTService;
 import com.google.gson.Gson;
 
@@ -63,16 +62,15 @@ public class RoomDetailActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         RoomDetailAdapter adapter = new RoomDetailAdapter(this, list);
         listView.setAdapter(adapter);
-
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent= new Intent(RoomDetailActivity.this,HistoryActivity.class);
+                Intent intent= new Intent(getApplicationContext(),HistoryActivity.class);
 
                 //send room_id here
                 intent.putExtra("room_id","0");
+                intent.putExtra("room_topic", mqttServiceGet.gasTopic.get(0));
                 //-------------------------------
                 startActivity(intent);
 
@@ -103,6 +101,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
+
                 Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
                 int indexTopic = 0;
                 for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
