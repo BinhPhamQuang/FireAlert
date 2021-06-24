@@ -67,6 +67,9 @@ public class FireBaseHelper {
         });
     }
 
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void sendHistoryData(String room_id, float value, final DataStatus dataStatus)
     {

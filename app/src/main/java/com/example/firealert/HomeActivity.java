@@ -4,12 +4,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,6 +32,8 @@ import android.widget.Toast;
 
 import com.example.firealert.Adapter.HomeAdapter;
 import com.example.firealert.DTO.UserData;
+import com.example.firealert.Service.BackgroundService;
+import com.example.firealert.Service.Broadcast;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +56,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity {
+    public static final String CHANNEL_ID = "serviceBackground";
+
     ImageButton btnAddRoom;
     ImageButton btnNotification;
     View layoutAddroom;
@@ -65,10 +82,67 @@ public class HomeActivity extends AppCompatActivity {
     public static String GasConcentration;
 
 
+
+    private Context context;
+    private BackgroundService backgroundService;
+    private Intent mServiceIntent;
+    private boolean isMyServiceRunning(Class<?> serviceClass)
+    {
+        ActivityManager manager= (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service:manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if(serviceClass.getName().equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent broadcastIntent= new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this,Broadcast.class);
+        this.sendBroadcast(broadcastIntent);
+        super.onDestroy();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+//        this.context=this;
+//        Intent alarm= new Intent(this.context,Broadcast.class);
+//        boolean alarmRuning= (PendingIntent.getBroadcast(this.context,0,alarm,PendingIntent.FLAG_NO_CREATE)!=null);
+//        if(alarmRuning==false)
+//        {
+//            PendingIntent pendingIntent= PendingIntent.getBroadcast(this.context,0,alarm,0);
+//            AlarmManager alarmManager= (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime(),15000,pendingIntent);
+//
+//        }
+
+
+        backgroundService= new BackgroundService();
+        mServiceIntent= new Intent(this,backgroundService.getClass());
+        if(!isMyServiceRunning(backgroundService.getClass()))
+        {
+            startService(mServiceIntent);
+        }
+
+
+
+
+
+
+
+
         layoutAddroom = findViewById(R.id.lb_addroom);
         btnAddRoom = (ImageButton) findViewById(R.id.btnAddRoom);
         txtWelcome = (TextView) findViewById(R.id.tv_welcome);
@@ -77,6 +151,9 @@ public class HomeActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+
+
+
         databaseReference = FirebaseDatabase.getInstance().getReference("User").child(firebaseUser.getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -122,15 +199,17 @@ public class HomeActivity extends AppCompatActivity {
         btnNotification.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if(badge.getVisibility()== View.INVISIBLE){
-                    Toast.makeText(getApplicationContext(),"No Notices Right Now!", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
-                    intent.putExtra("room_name", "Room 1");
-                    intent.putExtra("value", GasConcentration);
-                    startActivity(intent);
-                }
+
+
+//                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.next)
+//                        .setContentTitle("Warning !!!")
+//                        .setContentText("You have some problem")
+//                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//
+//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+//                notificationManager.notify(123,mBuilder.build());
+
             }
         });
 
@@ -189,70 +268,72 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         //__ END OF THIS PART
 
-        try {
-            mqttService = new MQTTService(this);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        mqttService.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                int indexTopic = 0;
-                for (int i = 0; i < mqttService.gasTopic.length; i++) {
-                    if (mqttService.gasTopic[i].equals(topic)) {
-                        indexTopic = i;
-                    }
-                }
-                if (Float.parseFloat(message.toString()) >= 10)
-                {
-                    Log.d("Message Arrived: ", topic);
-                    GasConcentration = message.toString();
-                    if(badge.getVisibility() == View.INVISIBLE) {
-                        mqttService.sendDataMQTT(mqttService.SPEAKER, mqttService.buzzerTopic[indexTopic]);
-                        mqttService.sendDataMQTT(mqttService.LED, mqttService.ledTopic[indexTopic]);
-
-
-                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
-                        // change this value for send data to another activity
-                        intent.putExtra("room_name", mqttService.rooms[indexTopic]);
-                        //--------------------------------------------
-                        intent.putExtra("value", message.toString());
-                        // must change this value by room_id
-                        intent.putExtra("indexTopic",indexTopic);
-                        startActivity(intent);
-                    }
-                }
-                else if (Float.parseFloat(message.toString()) >= 2){
-                    badge.setVisibility(View.INVISIBLE);
-                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
-                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
-                }
-                else {
-                    badge.setVisibility(View.INVISIBLE);
-                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
-                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
-                    mqttService.sendDataMQTT(mqttService.DRV_PWM_OFF, mqttService.drvTopic[indexTopic]);
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
+//        try {
+//            mqttService = new MQTTService(this);
+//        } catch (MqttException e) {
+//            e.printStackTrace();
+//        }
+//        mqttService.setCallback(new MqttCallbackExtended() {
+//            @Override
+//            public void connectComplete(boolean reconnect, String serverURI) {
+//
+//            }
+//
+//            @Override
+//            public void connectionLost(Throwable cause) {
+//
+//            }
+//
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            @Override
+//            public void messageArrived(String topic, MqttMessage message) throws Exception {
+//                int indexTopic = 0;
+//                for (int i = 0; i < mqttService.gasTopic.length; i++) {
+//                    if (mqttService.gasTopic[i].equals(topic)) {
+//                        indexTopic = i;
+//                    }
+//                }
+//                if (Float.parseFloat(message.toString()) >= 10)
+//                {
+//                    Log.d("Message Arrived: ", topic);
+//                    GasConcentration = message.toString();
+//                    if(badge.getVisibility() == View.INVISIBLE) {
+//                        mqttService.sendDataMQTT(mqttService.SPEAKER, mqttService.buzzerTopic[indexTopic]);
+//                        mqttService.sendDataMQTT(mqttService.LED, mqttService.ledTopic[indexTopic]);
+//
+//
+//                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
+//                        // change this value for send data to another activity
+//                        intent.putExtra("room_name", mqttService.rooms[indexTopic]);
+//                        //--------------------------------------------
+//                        intent.putExtra("value", message.toString());
+//                        // must change this value by room_id
+//                        intent.putExtra("indexTopic",indexTopic);
+//                        startActivity(intent);
+//                    }
+//                }
+//                else if (Float.parseFloat(message.toString()) >= 2){
+//                    badge.setVisibility(View.INVISIBLE);
+//                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
+//                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
+//                }
+//                else {
+//                    badge.setVisibility(View.INVISIBLE);
+//                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
+//                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
+//                    mqttService.sendDataMQTT(mqttService.DRV_PWM_OFF, mqttService.drvTopic[indexTopic]);
+//                }
+//            }
+//
+//            @Override
+//            public void deliveryComplete(IMqttDeliveryToken token) {
+//
+//            }
+//        });
 
     }
+
+
 
     public void AddItemsToRecyclerViewArrayList()
     {
