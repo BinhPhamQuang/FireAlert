@@ -52,8 +52,10 @@ public class BackgroundService extends Service
     @Override
     public void onCreate() {
         super.onCreate();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             startMyOwnForeground();
+            createNotificationChannel();
+        }
         else
             startForeground(1, new Notification());
 
@@ -204,6 +206,8 @@ public class BackgroundService extends Service
                         intent.putExtra("pass_1", pass_1);
                         intent.putExtra("user_2", user_2);
                         intent.putExtra("pass_2", pass_2);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                         PendingIntent pendingIntent= PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
                         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                                 .setSmallIcon(R.drawable.next)

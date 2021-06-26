@@ -66,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayout ll_close_layout;
     public static String user_1;
     public static String user_2;
+    public static boolean firstAdd = true;
     TextView txtWelcome;
     public static ArrayList<HashMap<String,String>> list = new ArrayList<>();
     public static final String ROOM_NAME = "1";
@@ -275,30 +276,7 @@ public class HomeActivity extends AppCompatActivity {
 
         //__ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
         AddItemsToRecyclerViewArrayList();
-//        FireBaseHelper.getInstance().getHouseDevice(MainActivity.HousePath + "/rooms", new FireBaseHelper.DataStatus() {
-//            @Override
-//            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
-//                List<Room> lst =  (List<Room>) temp;
-//                int i = 0;
-//                for(Room dataRoom: lst){
-//                    if (i == 0) {
-//                        list.get(0).put("1", dataRoom.name);
-//                        adapter.notifyDataSetChanged();
-//                    } else {
-//                        HashMap<String, String> hashmap = new HashMap<String, String>();
-//                        hashmap.put(ROOM_NAME, dataRoom.name);
-//                        hashmap.put(ROOM_GAS, "0");
-//                        list.add(hashmap);
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                    i++;
-//                }
-//            }
-//            @Override
-//            public void dataIsSent() {
-//
-//            }
-//        });
+
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(RecyclerViewLayoutManager);
@@ -341,135 +319,7 @@ public class HomeActivity extends AppCompatActivity {
         void onCallback();
     }
 
-//    private void setCallbackMQTT() {
-//        if(!haveRead) {
-//            haveRead = true;
-//            System.out.println("Start to set up adafruit");
-//            try {
-//                if (mqttServiceGet == null) {
-//                    mqttServiceGet = new MQTTService(this, listAccount.get(0).getUsername(), listAccount.get(0).getPassword(), "123456", false);
-//                }
-//                if (mqttServiceSend == null) {
-//                    mqttServiceSend = new MQTTService(this, listAccount.get(1).getUsername(), listAccount.get(1).getPassword(), "654321", true);
-//                }
-//            } catch (MqttException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        mqttServiceGet.setCallback(new MqttCallbackExtended() {
-//            @Override
-//            public void connectComplete(boolean reconnect, String serverURI) {
-//
-//            }
-//
-//            @Override
-//            public void connectionLost(Throwable cause) {
-//                Toast.makeText(getApplicationContext(),"Can't connect to server get", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void messageArrived(String topic, MqttMessage message) throws Exception {
-//                if(mqttServiceGet.gasTopic.size()==0) return ;
-//                boolean subscribed = false;
-//                int indexTopic = 0;
-//                for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
-//                    Log.d("Rooms",mqttServiceGet.gasTopic.get(i));
-//                    if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
-//                        indexTopic = i;
-//                        subscribed = true;
-//                    }
-//                }
-//                System.out.println(subscribed);
-//                if(!subscribed) {
-//                    return ;
-//                }
-//                Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
-//                Log.d("Size of rooms", String.valueOf(HomeActivity.mqttServiceSend.rooms.size()));
-//
-//                if(list.get(0).get("1").equals("Not connected")){
-//                    list.clear();
-//                    for (int i = 0; i < HomeActivity.mqttServiceSend.rooms.size(); i++) {
-//                        HashMap<String, String> hashmap = new HashMap<String, String>();
-//                        hashmap.put(ROOM_NAME, HomeActivity.mqttServiceSend.rooms.get(i));
-//                        hashmap.put(ROOM_GAS, "0");
-//                        list.add(hashmap);
-//                    }
-//                }
-//                list.get(indexTopic).put("2",mess.get("data"));
-//                adapter.notifyDataSetChanged();
-//
-//                if(RoomDetailActivity.list.size() != 0 && RoomDetailActivity.list != null){
-//                    RoomDetailActivity.list.get(indexTopic).put("2",mess.get("data"));
-//                    RoomDetailActivity.adapter.notifyDataSetChanged();
-//                }
-////                Log.d("Info: ",mess.get("data"));
-//                Log.d("Message Arrived from: ", topic);
-//                Log.d("Info: ",message.toString());
-//                GasConcentration = mess.get("data");
-//                if (Float.parseFloat(mess.get("data")) == 1)
-//                {
-//                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
-//                        Log.d("Buzzer",HomeActivity.mqttServiceSend.buzzerTopic.get(indexTopic));
-//                        mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
-//                        Log.d("Led",HomeActivity.mqttServiceSend.ledTopic.get(indexTopic));
-//                        mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
-//                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
-//                        // change this value for send data to another activity
-//                        Room_name = mqttServiceSend.rooms.get(indexTopic);
-//                        intent.putExtra("room_name", Room_name);
-//                        //--------------------------------------------
-//                        intent.putExtra("value", mess.get("data"));
-//                        // must change this value by room_id
-//                        intent.putExtra("indexTopic",indexTopic);
-//                        intent.putExtra("user_1", listAccount.get(0).getUsername());
-//                        intent.putExtra("pass_1", listAccount.get(0).getPassword());
-//                        intent.putExtra("user_2", listAccount.get(1).getUsername());
-//                        intent.putExtra("pass_2", listAccount.get(1).getPassword());
-//                        startActivity(intent);
-//
-//                    }
-//                }
-//                else {
-//                    HomeActivity.badge.setVisibility(View.INVISIBLE);
-//                    Log.d("Buzzer",HomeActivity.mqttServiceSend.buzzerTopic.get(indexTopic));
-//                    mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
-//                    Log.d("Led",HomeActivity.mqttServiceSend.ledTopic.get(indexTopic));
-//                    mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
-//                    Log.d("Driver",HomeActivity.mqttServiceSend.drvTopic.get(indexTopic));
-//                    mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM_OFF,mqttServiceSend.drvTopic.get(indexTopic));
-//                }
-//
-//            }
-//
-//            @Override
-//            public void deliveryComplete(IMqttDeliveryToken token) {
-//
-//            }
-//        });
-//
-//        mqttServiceSend.setCallback(new MqttCallbackExtended() {
-//            @Override
-//            public void connectComplete(boolean reconnect, String serverURI) {
-//
-//            }
-//
-//            @Override
-//            public void connectionLost(Throwable cause) {
-//                Toast.makeText(getApplicationContext(),"Can't connect to server send", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void messageArrived(String topic, MqttMessage message) throws Exception {
-//
-//            }
-//            @Override
-//            public void deliveryComplete(IMqttDeliveryToken token) {
-//
-//            }
-//        });
-//    }
+
 
     private void readAdafruitAccount(FirebaseCallback firebaseCallback) {
         DatabaseReference accountReference = FirebaseDatabase.getInstance().getReference("House").child(houseId).child("adafruit_account");
@@ -515,6 +365,32 @@ public class HomeActivity extends AppCompatActivity {
                 phone = user.getPhone();
                 houseId = user.getHouse_id();
                 MainActivity.HousePath = houseId;
+                FireBaseHelper.getInstance().getHouseDevice(MainActivity.HousePath + "/rooms", new FireBaseHelper.DataStatus() {
+                    @Override
+                    public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
+                        if(!firstAdd) return ;
+                        firstAdd = false;
+                        List<Room> lst =  (List<Room>) temp;
+                        int i = 0;
+                        for(Room dataRoom: lst){
+                            if (i == 0) {
+                                list.get(0).put("1", dataRoom.name);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                HashMap<String, String> hashmap = new HashMap<String, String>();
+                                hashmap.put(ROOM_NAME, dataRoom.name);
+                                hashmap.put(ROOM_GAS, "0");
+                                list.add(hashmap);
+                                adapter.notifyDataSetChanged();
+                            }
+                            i++;
+                        }
+                    }
+                    @Override
+                    public void dataIsSent() {
+
+                    }
+                });
                 String[] name = username.split(" ");
                 txtWelcome.setText(String.format("Welcome %s !", name[name.length - 1]));
                 firebaseCallback.onCallback();

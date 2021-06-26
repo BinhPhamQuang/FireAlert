@@ -137,7 +137,7 @@ public class SettingsActivity extends AppCompatActivity {
                 HomeActivity.adapter = null;
                 RoomDetailActivity.list = new ArrayList<>();
                 RoomDetailActivity.adapter = null;
-
+                HomeActivity.firstAdd = true;
 
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
