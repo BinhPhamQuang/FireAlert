@@ -7,7 +7,7 @@ public class AdafruitAccount {
     public AdafruitAccount() {
     }
 
-    public AdafruitAccount(String username, String password) {
+    public AdafruitAccount(String password, String username) {
         this.username = username;
         this.password = password;
     }

@@ -1,6 +1,7 @@
 package com.example.firealert;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.firealert.Adapter.ViewPageAdapter;
@@ -15,11 +16,13 @@ import com.example.firealert.fragment_tips.FragmentTips7;
 import com.example.firealert.fragment_tips.FragmentTips8;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -29,6 +32,8 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.Hashtable;
+
 public class TipsActivity extends AppCompatActivity {
     ViewPager viewPager;
     ImageButton btn_back;
@@ -36,6 +41,8 @@ public class TipsActivity extends AppCompatActivity {
     DotsIndicator dotsIndicator;
     ImageButton btnBack;
     ImageButton btnNext;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,8 @@ public class TipsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+//
     }
     private void getTab()
     {

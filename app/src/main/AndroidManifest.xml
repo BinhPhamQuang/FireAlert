@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.firealert">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -13,11 +15,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FireAlert">
-        <activity android:name=".ForgottenPasswordActivity"></activity>
+        android:theme="@style/Theme.FireAlert"
+        android:usesCleartextTraffic="true">
+
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
+
+        <activity android:name=".ForgottenPasswordActivity" />
         <activity android:name=".VerifyEmailActivity" />
+        <service
+            android:name=".Service.BackgroundService"/>
+        <receiver android:name=".Service.Broadcast"></receiver>
         <activity android:name=".HistoryActivity" />
-        <activity android:name=".fragment_bottom_sheet.Confirm" />
+        <activity
+            android:name=".fragment_bottom_sheet.Confirm"
+            tools:ignore="Instantiatable" />
         <activity android:name=".PrivacyActivity" />
         <activity android:name=".RoomDetailActivity" />
         <activity android:name=".AboutActivity" />
@@ -44,8 +55,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 
 </manifest>

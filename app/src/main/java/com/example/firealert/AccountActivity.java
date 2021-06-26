@@ -27,6 +27,7 @@ public class AccountActivity extends AppCompatActivity {
     ImageButton btn_back;
     ViewPageAdapter viewPageAdapter;
     TabLayout tab_layout;
+
     String userId, email, address, phone, username, houseId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

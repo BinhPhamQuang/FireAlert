@@ -25,7 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static String HousePath;
+    public static boolean firstAddSend = true;
+    public static boolean firstAddGet = true;
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

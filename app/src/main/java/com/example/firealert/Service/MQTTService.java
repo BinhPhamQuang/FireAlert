@@ -3,6 +3,10 @@ package com.example.firealert.Service;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.firealert.DAO.FireBaseHelper;
+import com.example.firealert.DTO.Room;
+import com.example.firealert.MainActivity;
+
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -14,41 +18,45 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 public class MQTTService {
     final String serverUri= "tcp://io.adafruit.com:1883";
-    final String clientID="123456";
-//    final String subscriptionTopic ="minhanhlhpx5/feeds/gas-concentration";
-//    final String username="minhanhlhpx5";
-//    final String password="aio_luee30ceekmTQiIGDRjAIf3RAxqw";
-//    final String username="biennguyenbk00";
-//    final String password="aio_iboi96HqYYZyzroSlH4yp6byPKCj";
-    String username;
-    String password;
+    private final String clientID = "123456";
+    private final String username;
+    private final String password;
+    public final boolean send;
 
-//    public final String[] gasTopic ={"biennguyenbk00/feeds/gas","biennguyenbk00/feeds/gas2"};
-//    public final String[] drvTopic ={"biennguyenbk00/feeds/output.drv","biennguyenbk00/feeds/output.drv2"};
-//    public final String[] ledTopic ={"biennguyenbk00/feeds/output.led","biennguyenbk00/feeds/output.led2"};
-//    public final String[] buzzerTopic ={"biennguyenbk00/feeds/output.buzzer","biennguyenbk00/feeds/output.buzzer2"};
-    public final String[] gasTopic ={"buitandanh1612/feeds/gas"};
-    public final String[] drvTopic ={"buitandanh1612/feeds/drv"};
-    public final String[] ledTopic ={"buitandanh1612/feeds/led"};
-    public final String[] buzzerTopic ={"buitandanh1612/feeds/buzzer"};
+    public  ArrayList<String> gasTopic = new ArrayList<String>();
+    public  ArrayList<String> drvTopic = new ArrayList<String>();
+    public  ArrayList<String> ledTopic = new ArrayList<String>();
+    public  ArrayList<String> buzzerTopic = new ArrayList<String>();
+    public  ArrayList<String> rooms = new ArrayList<String>();
 
-    public final String[] rooms ={"Living room","Kitchen"};
+    public final String LED         = "{\"id\":\"1\",\"name\":\"LED\",\"data\":\"1\",\"unit\":\"\"}";
+    public final String LED_OFF     = "{\"id\":\"1\",\"name\":\"LED\",\"data\":\"0\",\"unit\":\"\"}";
+    public final String SPEAKER     = "{\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"1000\",\"unit\":\"\"}";
+    public final String SPEAKER_OFF = "{\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"0\",\"unit\":\"\"}";
+    public final String DRV_PWM     = "{\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"240\",\"unit\":\"\"}";
+    public final String DRV_PWM_OFF = "{\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"0\",\"unit\":\"\"}";
 
 
-    public final String LED         = "[\"id\":\"1\",\"name\":\"LED\",\"data\":\"1\",\"unit\":\"\"]";
-    public final String LED_OFF     = "[\"id\":\"1\",\"name\":\"LED\",\"data\":\"2\",\"unit\":\"\"]";
-    public final String SPEAKER     = "[\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"1000\",\"unit\":\"\"]";
-    public final String SPEAKER_OFF = "[\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"0\",\"unit\":\"\"]";
-    public final String DRV_PWM     = "[\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"240\",\"unit\":\"\"]";
-    public final String DRV_PWM_OFF = "[\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"0\",\"unit\":\"\"]";
+
 
     public MqttAndroidClient mqttAndroidClient;
-    public MQTTService(Context context, String username, String password) throws MqttException {
+
+    public MQTTService(Context context, String username, String password, String clientID, boolean send) throws MqttException {
         this.username = username;
         this.password = password;
+        this.send = send;
+
+        System.out.println(this.username);
+        System.out.println(this.password);
+
         mqttAndroidClient = new MqttAndroidClient(context,serverUri,clientID);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -73,6 +81,8 @@ public class MQTTService {
             }
         });
         connect();
+
+
     }
 
     public void setCallback(MqttCallbackExtended callback)
@@ -96,7 +106,10 @@ public class MQTTService {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-                    for (String topic: gasTopic) { subscribeToTopic(topic); }
+                    if((send && rooms.size()==0)||(!send && gasTopic.size()==0))
+                        System.out.println("House Device");
+                        SetUpHouseDevice();
+//                    for (String topic: gasTopic) { subscribeToTopic(topic); }
                 }
 
                 @Override
@@ -111,18 +124,18 @@ public class MQTTService {
             ex.printStackTrace();
         }
     }
-    private  void subscribeToTopic(String topic)
+    public void subscribeToTopic(String topic)
     {
         try {
             mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Log.w("Mqtt","Subscribed !");
+                    Log.w("Mqtt","Subscribed: " + topic);
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.w("Mqtt","Subscribed fail !");
+                    Log.w("Mqtt","Subscribed fail: " + topic);
                 }
             });
 
@@ -147,5 +160,78 @@ public class MQTTService {
             Log.d("MQTT","sendDataMQTT: cannot send message");
         }
     }
+    private void SetUpHouseDevice(){
+        FireBaseHelper.getInstance().getHouseDevice(MainActivity.HousePath + "/rooms", new FireBaseHelper.DataStatus() {
+            @Override
+            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
+                        if(send && MainActivity.firstAddSend){
+                            MainActivity.firstAddSend = false;
+                        }
+                        else{
+                            if(!send && MainActivity.firstAddGet){
+                                MainActivity.firstAddGet = false;
+                            }
+                            else{
+                                return ;
+                            }
+                        }
+                        List<Room> lst = (List<Room>) temp;
+                        System.out.println("list room count " + lst.size());
+                        for (Room dataRoom : lst) {
+                            if (!send) {
+                                gasTopic.add(dataRoom.gas);
+                                System.out.println(dataRoom.gas);
+                            } else {
+                                drvTopic.add(dataRoom.drv);
+                                System.out.println(dataRoom.drv);
+                                ledTopic.add(dataRoom.led);
+                                System.out.println(dataRoom.led);
+                                buzzerTopic.add(dataRoom.buzzer);
+                                System.out.println(dataRoom.buzzer);
+                                rooms.add(dataRoom.name);
+                            }
 
+                        }
+                        for (String topic : gasTopic) {
+                            Log.d("Subscribe topic:", topic);
+                            subscribeToTopic(topic);
+                        }
+
+
+            }
+            @Override
+            public void dataIsSent() {
+
+            }
+        });
+
+
+    }
+
+    public Hashtable<String,String> getMessage(String message){
+        Hashtable<String,String> result = new Hashtable<>();
+        int index = message.indexOf("\"id\"",0);
+        int begin = message.indexOf("\"",index+4);
+        int end = message.indexOf("\"",begin+1);
+
+        result.put("id",message.substring(begin+1,end));
+
+        index = message.indexOf("\"name\"",end+1);
+        begin = message.indexOf("\"",index+6);
+        end = message.indexOf("\"",begin+1);
+        result.put("name",message.substring(begin+1,end));
+
+        index = message.indexOf("\"data\"",end+1);
+        begin = message.indexOf("\"",index+6);
+        end = message.indexOf("\"",begin+1);
+        result.put("data",message.substring(begin+1,end));
+
+        index = message.indexOf("\"unit\"",end+1);
+        begin = message.indexOf("\"",index+6);
+        end = message.indexOf("\"",begin+1);
+        result.put("unit",message.substring(begin+1,end));
+
+
+        return result;
+    }
 }

@@ -1,12 +1,15 @@
 package com.example.firealert;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Button;
@@ -14,7 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.firealert.DTO.Room;
 import com.example.firealert.DTO.UserData;
+import com.example.firealert.Service.BackgroundService;
 import com.example.firealert.Service.MQTTService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,10 +34,15 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 
 public class SettingsActivity extends AppCompatActivity {
     TextView helloTextView;
     private String userId, email, address, phone, username, houseId;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +77,11 @@ public class SettingsActivity extends AppCompatActivity {
                 intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
                 intent.putExtra("houseId", houseId);
+
+                intent.putExtra("user_1", getIntent().getStringExtra("user_1"));
+                intent.putExtra("pass_1", getIntent().getStringExtra("pass_1"));
+                intent.putExtra("user_2", getIntent().getStringExtra("user_2"));
+                intent.putExtra("pass_2", getIntent().getStringExtra("pass_2"));
                 startActivity(intent);
             }
         });
@@ -76,6 +91,11 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),AboutActivity.class);
+
+                intent.putExtra("user_1", getIntent().getStringExtra("user_1"));
+                intent.putExtra("pass_1", getIntent().getStringExtra("pass_1"));
+                intent.putExtra("user_2", getIntent().getStringExtra("user_2"));
+                intent.putExtra("pass_2", getIntent().getStringExtra("pass_2"));
                 startActivity(intent);
             }
         });
@@ -91,6 +111,11 @@ public class SettingsActivity extends AppCompatActivity {
                 intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
                 intent.putExtra("houseId", houseId);
+
+                intent.putExtra("user_1", getIntent().getStringExtra("user_1"));
+                intent.putExtra("pass_1", getIntent().getStringExtra("pass_1"));
+                intent.putExtra("user_2", getIntent().getStringExtra("user_2"));
+                intent.putExtra("pass_2", getIntent().getStringExtra("pass_2"));
                 startActivity(intent);
             }
         });
@@ -99,11 +124,30 @@ public class SettingsActivity extends AppCompatActivity {
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BackgroundService.user_1 = "";
+                BackgroundService.user_2 = "";
+                BackgroundService.pass_1 = "";
+                BackgroundService.pass_2 = "";
+                MainActivity.firstAddGet = true;
+                MainActivity.firstAddSend = true;
+                BackgroundService.mqttServiceGet = null;
+                BackgroundService.mqttServiceSend = null;
+                BackgroundService.haveRead = false;
+                HomeActivity.list = new ArrayList<>();
+                HomeActivity.adapter = null;
+                RoomDetailActivity.list = new ArrayList<>();
+                RoomDetailActivity.adapter = null;
+
+
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                
                 startActivity(intent);
             }
         });
+
+
     }
 }

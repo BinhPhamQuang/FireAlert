@@ -41,6 +41,16 @@
         android:layout_below="@id/toolbar"
         android:id="@+id/lv_historydata"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="620dp"
         />
+    <Button
+        android:id="@+id/delete_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lv_historydata"
+        android:text="Delete Room"
+        android:textAllCaps="false"
+        app:backgroundTint="#3282B8"
+        android:textSize="22dp"
+        android:textColor="#BBE1FA"/>
 </RelativeLayout>

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.firealert.DAO.FireBaseHelper;
 import com.example.firealert.DTO.AdafruitAccount;
+import com.example.firealert.Service.BackgroundService;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.Confirm;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
@@ -24,6 +25,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 public class WarningActivity extends AppCompatActivity {
@@ -32,7 +35,8 @@ public class WarningActivity extends AppCompatActivity {
     Button btn_fixitnow;
     TextView tv_nameRoom;
     TextView tv_valueGasConcentration;
-    MQTTService mqttService;
+
+
     int indexTopic;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -45,6 +49,7 @@ public class WarningActivity extends AppCompatActivity {
         tv_valueGasConcentration= findViewById(R.id.tv_valueGasConcentration);
         HomeActivity.badge.setVisibility(View.INVISIBLE);
         indexTopic = getIntent().getIntExtra("indexTopic",0);
+
         btn_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,41 +61,19 @@ public class WarningActivity extends AppCompatActivity {
         btn_fixitnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mqttService.sendDataMQTT(mqttService.DRV_PWM, mqttService.drvTopic[indexTopic]);
+
+                Log.d("Driver: ", BackgroundService.mqttServiceSend.drvTopic.get(indexTopic));
+                BackgroundService.mqttServiceSend.sendDataMQTT(BackgroundService.mqttServiceSend.DRV_PWM, BackgroundService.mqttServiceSend.drvTopic.get(indexTopic));
 //                mqttService.sendDataMQTT("240", "minhanhlhpx5/feeds/fan");
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 intent.putExtra("Class", "WarningActivity");
                 startActivity(intent);
+                onBackPressed();
             }
         });
         loadValueInfo();
 
-        try {
-            mqttService = new MQTTService(this, getIntent().getStringExtra("adafruitUsername"), getIntent().getStringExtra("adafruitPassword"));
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        mqttService.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
 
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

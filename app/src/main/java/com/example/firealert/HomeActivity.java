@@ -6,7 +6,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
+import com.example.firealert.DAO.FireBaseHelper;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.graphics.drawable.Icon;
+import android.os.SystemClock;
+import com.example.firealert.Service.BackgroundService;
+import com.example.firealert.Service.Broadcast;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,9 +31,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.util.List;
 import com.example.firealert.Adapter.HomeAdapter;
 import com.example.firealert.DTO.AdafruitAccount;
+import com.example.firealert.DTO.Room;
 import com.example.firealert.DTO.UserData;
 import com.example.firealert.Service.MQTTService;
 import com.example.firealert.fragment_bottom_sheet.FragmentBottomSheet;
@@ -40,34 +56,93 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public class HomeActivity extends AppCompatActivity {
+    public static final String CHANNEL_ID = "serviceBackground";
     ImageButton btnAddRoom;
     ImageButton btnNotification;
     View layoutAddroom;
     LinearLayout ll_close_layout;
-    MQTTService mqttService;
+    public static String user_1;
+    public static String user_2;
     TextView txtWelcome;
-    private ArrayList<HashMap<String,String>> list;
+    public static ArrayList<HashMap<String,String>> list = new ArrayList<>();
     public static final String ROOM_NAME = "1";
     public static final String ROOM_GAS ="2";
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager RecyclerViewLayoutManager;
-    HomeAdapter adapter;
+    public static HomeAdapter adapter;
     LinearLayoutManager HorizontalLayout;
 
     private String userId, email, address, phone, username, houseId;
-    private AdafruitAccount adafruitAccount = new AdafruitAccount();
-
+//    private AdafruitAccount adafruitAccount = new AdafruitAccount();
+    private ArrayList<AdafruitAccount> listAccount = new ArrayList<>();
     public static CardView badge;
     public static String GasConcentration;
+    public static String Room_name;
 
 
     @Override
+    protected void onStart() {
+
+        super.onStart();
+    }
+    private Context context;
+    private BackgroundService backgroundService;
+    private Intent mServiceIntent;
+    private boolean isMyServiceRunning(Class<?> serviceClass)
+    {
+        ActivityManager manager= (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service:manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if(serviceClass.getName().equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent broadcastIntent= new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this,Broadcast.class);
+        this.sendBroadcast(broadcastIntent);
+        super.onDestroy();
+        finish();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        readUserData(new FirebaseCallback() {
+            @Override
+            public void onCallback() {
+                readAdafruitAccount(new FirebaseCallback() {
+                    @Override
+                    public void onCallback() {
+                        backgroundService= new BackgroundService();
+                        BackgroundService.user_1 = listAccount.get(0).getUsername();
+                        BackgroundService.pass_1 = listAccount.get(0).getPassword();
+                        BackgroundService.user_2 = listAccount.get(1).getUsername();
+                        BackgroundService.pass_2 = listAccount.get(1).getPassword();
+                        if(backgroundService !=null) {
+                            mServiceIntent = new Intent(HomeActivity.this, backgroundService.getClass());
+                            if (!isMyServiceRunning(backgroundService.getClass())) {
+                                startService(mServiceIntent);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
         layoutAddroom = findViewById(R.id.lb_addroom);
         btnAddRoom = (ImageButton) findViewById(R.id.btnAddRoom);
         txtWelcome = (TextView) findViewById(R.id.tv_welcome);
@@ -80,6 +155,8 @@ public class HomeActivity extends AppCompatActivity {
                 layoutAddroom.setVisibility(View.INVISIBLE);
             }
         });
+
+
         badge = findViewById(R.id.badge);
         badge.setVisibility(View.INVISIBLE);
 
@@ -105,11 +182,16 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 else {
                     Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
-                    intent.putExtra("room_name", "Room 1");
+                    intent.putExtra("room_name", Room_name);
                     intent.putExtra("value", GasConcentration);
-                    intent.putExtra("adafruitUsername", adafruitAccount.getUsername());
-                    intent.putExtra("adafruitPassword", adafruitAccount.getPassword());
+//                    intent.putExtra("adafruitUsername", adafruitAccount.getUsername());
+//                    intent.putExtra("adafruitPassword", adafruitAccount.getPassword());
+                    intent.putExtra("user_1", listAccount.get(0).getUsername());
+                    intent.putExtra("pass_1", listAccount.get(0).getPassword());
+                    intent.putExtra("user_2", listAccount.get(1).getUsername());
+                    intent.putExtra("pass_2", listAccount.get(1).getPassword());
                     startActivity(intent);
+
                 }
             }
         });
@@ -121,6 +203,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 FragmentBottomSheet bottomsheet = new FragmentBottomSheet();
                 bottomsheet.show(getSupportFragmentManager(),"add_room");
+
             }
         });
 
@@ -135,7 +218,15 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
                 intent.putExtra("houseId", houseId);
+
+                intent.putExtra("user_1", listAccount.get(0).getUsername());
+                intent.putExtra("pass_1", listAccount.get(0).getPassword());
+                intent.putExtra("user_2", listAccount.get(1).getUsername());
+                intent.putExtra("pass_2", listAccount.get(1).getPassword());
+
+
                 startActivity(intent);
+
             }
         });
 
@@ -144,6 +235,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),TipsActivity.class);
+
+
+                intent.putExtra("user_1", listAccount.get(0).getUsername());
+                intent.putExtra("pass_1", listAccount.get(0).getPassword());
+                intent.putExtra("user_2", listAccount.get(1).getUsername());
+                intent.putExtra("pass_2", listAccount.get(1).getPassword());
+
                 startActivity(intent);
             }
         });
@@ -152,67 +250,90 @@ public class HomeActivity extends AppCompatActivity {
         btnRoomDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(list.get(0).get("1").equals("Not connected")){
+                    list.clear();
+                    for (int i = 0; i < BackgroundService.mqttServiceSend.rooms.size(); i++) {
+                        HashMap<String, String> hashmap = new HashMap<String, String>();
+                        hashmap.put(ROOM_NAME, BackgroundService.mqttServiceSend.rooms.get(i));
+                        hashmap.put(ROOM_GAS, "0");
+                        list.add(hashmap);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+
                 Intent intent= new Intent(getApplicationContext(),RoomDetailActivity.class);
+                intent.putExtra("listRoom",list);
+                intent.putExtra("user_1", listAccount.get(0).getUsername());
+                intent.putExtra("pass_1", listAccount.get(0).getPassword());
+                intent.putExtra("user_2", listAccount.get(1).getUsername());
+                intent.putExtra("pass_2", listAccount.get(1).getPassword());
+
                 startActivity(intent);
+
             }
         });
 
         //__ THIS PART IS USE FOR RECYCLER VIEW (LIST OF ROOMS)
+        AddItemsToRecyclerViewArrayList();
+//        FireBaseHelper.getInstance().getHouseDevice(MainActivity.HousePath + "/rooms", new FireBaseHelper.DataStatus() {
+//            @Override
+//            public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
+//                List<Room> lst =  (List<Room>) temp;
+//                int i = 0;
+//                for(Room dataRoom: lst){
+//                    if (i == 0) {
+//                        list.get(0).put("1", dataRoom.name);
+//                        adapter.notifyDataSetChanged();
+//                    } else {
+//                        HashMap<String, String> hashmap = new HashMap<String, String>();
+//                        hashmap.put(ROOM_NAME, dataRoom.name);
+//                        hashmap.put(ROOM_GAS, "0");
+//                        list.add(hashmap);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                    i++;
+//                }
+//            }
+//            @Override
+//            public void dataIsSent() {
+//
+//            }
+//        });
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         RecyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(RecyclerViewLayoutManager);
-        AddItemsToRecyclerViewArrayList();
+
         adapter = new HomeAdapter(list);
         HorizontalLayout = new LinearLayoutManager(
                 HomeActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(HorizontalLayout);
         recyclerView.setAdapter(adapter);
         //__ END OF THIS PART
+//        System.out.println("Minh Anh end of part");
 
-        readUserData(new FirebaseCallback() {
-            @Override
-            public void onCallback() {
-                readAdafruitAccount(new FirebaseCallback() {
-                    @Override
-                    public void onCallback() {
-                        setCallbackMQTT();
-                    }
-                });
-            }
-        });
     }
 
 
     public void AddItemsToRecyclerViewArrayList()
     {
         // Adding items to ArrayList
-        list = new ArrayList<HashMap<String, String>>();
+        HomeActivity.list.clear();
+        if(BackgroundService.mqttServiceGet == null){
+            HashMap<String, String> hashmap = new HashMap<String, String>();
+            hashmap.put(ROOM_NAME, "Not connected");
+            hashmap.put(ROOM_GAS, "0");
+            HomeActivity.list.add(hashmap);
+        }
+        else {
+            list.clear();
+            for (int i = 0; i < BackgroundService.mqttServiceSend.rooms.size(); i++) {
+                HashMap<String, String> hashmap = new HashMap<String, String>();
+                hashmap.put(ROOM_NAME, BackgroundService.mqttServiceSend.rooms.get(i));
+                hashmap.put(ROOM_GAS, "0");
+                list.add(hashmap);
+            }
+        }
 
-        HashMap<String,String> hashmap = new HashMap<String,String>();
-        HashMap<String,String> hashmap1 = new HashMap<String,String>();
-        HashMap<String,String> hashmap2 = new HashMap<String,String>();
-        HashMap<String,String> hashmap3 = new HashMap<String,String>();
-        HashMap<String,String> hashmap4 = new HashMap<String,String>();
-
-        hashmap.put(ROOM_NAME, "Room 1");
-        hashmap.put(ROOM_GAS, "0.00");
-        list.add(hashmap);
-
-        hashmap1.put(ROOM_NAME, "Room 2");
-        hashmap1.put(ROOM_GAS, "1.00");
-        list.add(hashmap1);
-
-        hashmap2.put(ROOM_NAME, "Room 3");
-        hashmap2.put(ROOM_GAS, "9.20");
-        list.add(hashmap2);
-
-        hashmap3.put(ROOM_NAME, "Room 4");
-        hashmap3.put(ROOM_GAS, "5.20");
-        list.add(hashmap3);
-
-        hashmap4.put(ROOM_NAME, "Room 5");
-        hashmap4.put(ROOM_GAS, "1.20");
-        list.add(hashmap4);
     }
 
 
@@ -220,85 +341,155 @@ public class HomeActivity extends AppCompatActivity {
         void onCallback();
     }
 
-    private void setCallbackMQTT() {
-        try {
-            mqttService = new MQTTService(this, adafruitAccount.getUsername(), adafruitAccount.getPassword());
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        mqttService.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                int indexTopic = 0;
-                for (int i = 0; i < mqttService.gasTopic.length; i++) {
-                    if (mqttService.gasTopic[i].equals(topic)) {
-                        indexTopic = i;
-                    }
-                }
-                if (Float.parseFloat(message.toString()) >= 10)
-                {
-                    Log.d("Message Arrived: ", topic);
-                    GasConcentration = message.toString();
-                    if(badge.getVisibility() == View.INVISIBLE) {
-                        mqttService.sendDataMQTT(mqttService.SPEAKER, mqttService.buzzerTopic[indexTopic]);
-                        mqttService.sendDataMQTT(mqttService.LED, mqttService.ledTopic[indexTopic]);
-
-
-                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
-                        // change this value for send data to another activity
-                        intent.putExtra("room_name", mqttService.rooms[indexTopic]);
-                        //--------------------------------------------
-                        intent.putExtra("value", message.toString());
-                        // must change this value by room_id
-                        intent.putExtra("indexTopic",indexTopic);
-                        intent.putExtra("adafruitUsername", adafruitAccount.getUsername());
-                        intent.putExtra("adafruitPassword", adafruitAccount.getPassword());
-                        startActivity(intent);
-                    }
-                }
-                else if (Float.parseFloat(message.toString()) >= 2){
-                    badge.setVisibility(View.INVISIBLE);
-                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
-                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
-                }
-                else {
-                    badge.setVisibility(View.INVISIBLE);
-                    mqttService.sendDataMQTT(mqttService.SPEAKER_OFF, mqttService.buzzerTopic[indexTopic]);
-                    mqttService.sendDataMQTT(mqttService.LED_OFF, mqttService.ledTopic[indexTopic]);
-                    mqttService.sendDataMQTT(mqttService.DRV_PWM_OFF, mqttService.drvTopic[indexTopic]);
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
-    }
+//    private void setCallbackMQTT() {
+//        if(!haveRead) {
+//            haveRead = true;
+//            System.out.println("Start to set up adafruit");
+//            try {
+//                if (mqttServiceGet == null) {
+//                    mqttServiceGet = new MQTTService(this, listAccount.get(0).getUsername(), listAccount.get(0).getPassword(), "123456", false);
+//                }
+//                if (mqttServiceSend == null) {
+//                    mqttServiceSend = new MQTTService(this, listAccount.get(1).getUsername(), listAccount.get(1).getPassword(), "654321", true);
+//                }
+//            } catch (MqttException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        mqttServiceGet.setCallback(new MqttCallbackExtended() {
+//            @Override
+//            public void connectComplete(boolean reconnect, String serverURI) {
+//
+//            }
+//
+//            @Override
+//            public void connectionLost(Throwable cause) {
+//                Toast.makeText(getApplicationContext(),"Can't connect to server get", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            @Override
+//            public void messageArrived(String topic, MqttMessage message) throws Exception {
+//                if(mqttServiceGet.gasTopic.size()==0) return ;
+//                boolean subscribed = false;
+//                int indexTopic = 0;
+//                for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
+//                    Log.d("Rooms",mqttServiceGet.gasTopic.get(i));
+//                    if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
+//                        indexTopic = i;
+//                        subscribed = true;
+//                    }
+//                }
+//                System.out.println(subscribed);
+//                if(!subscribed) {
+//                    return ;
+//                }
+//                Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
+//                Log.d("Size of rooms", String.valueOf(HomeActivity.mqttServiceSend.rooms.size()));
+//
+//                if(list.get(0).get("1").equals("Not connected")){
+//                    list.clear();
+//                    for (int i = 0; i < HomeActivity.mqttServiceSend.rooms.size(); i++) {
+//                        HashMap<String, String> hashmap = new HashMap<String, String>();
+//                        hashmap.put(ROOM_NAME, HomeActivity.mqttServiceSend.rooms.get(i));
+//                        hashmap.put(ROOM_GAS, "0");
+//                        list.add(hashmap);
+//                    }
+//                }
+//                list.get(indexTopic).put("2",mess.get("data"));
+//                adapter.notifyDataSetChanged();
+//
+//                if(RoomDetailActivity.list.size() != 0 && RoomDetailActivity.list != null){
+//                    RoomDetailActivity.list.get(indexTopic).put("2",mess.get("data"));
+//                    RoomDetailActivity.adapter.notifyDataSetChanged();
+//                }
+////                Log.d("Info: ",mess.get("data"));
+//                Log.d("Message Arrived from: ", topic);
+//                Log.d("Info: ",message.toString());
+//                GasConcentration = mess.get("data");
+//                if (Float.parseFloat(mess.get("data")) == 1)
+//                {
+//                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
+//                        Log.d("Buzzer",HomeActivity.mqttServiceSend.buzzerTopic.get(indexTopic));
+//                        mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
+//                        Log.d("Led",HomeActivity.mqttServiceSend.ledTopic.get(indexTopic));
+//                        mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
+//                        Intent intent = new Intent(HomeActivity.this, WarningActivity.class);
+//                        // change this value for send data to another activity
+//                        Room_name = mqttServiceSend.rooms.get(indexTopic);
+//                        intent.putExtra("room_name", Room_name);
+//                        //--------------------------------------------
+//                        intent.putExtra("value", mess.get("data"));
+//                        // must change this value by room_id
+//                        intent.putExtra("indexTopic",indexTopic);
+//                        intent.putExtra("user_1", listAccount.get(0).getUsername());
+//                        intent.putExtra("pass_1", listAccount.get(0).getPassword());
+//                        intent.putExtra("user_2", listAccount.get(1).getUsername());
+//                        intent.putExtra("pass_2", listAccount.get(1).getPassword());
+//                        startActivity(intent);
+//
+//                    }
+//                }
+//                else {
+//                    HomeActivity.badge.setVisibility(View.INVISIBLE);
+//                    Log.d("Buzzer",HomeActivity.mqttServiceSend.buzzerTopic.get(indexTopic));
+//                    mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
+//                    Log.d("Led",HomeActivity.mqttServiceSend.ledTopic.get(indexTopic));
+//                    mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
+//                    Log.d("Driver",HomeActivity.mqttServiceSend.drvTopic.get(indexTopic));
+//                    mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM_OFF,mqttServiceSend.drvTopic.get(indexTopic));
+//                }
+//
+//            }
+//
+//            @Override
+//            public void deliveryComplete(IMqttDeliveryToken token) {
+//
+//            }
+//        });
+//
+//        mqttServiceSend.setCallback(new MqttCallbackExtended() {
+//            @Override
+//            public void connectComplete(boolean reconnect, String serverURI) {
+//
+//            }
+//
+//            @Override
+//            public void connectionLost(Throwable cause) {
+//                Toast.makeText(getApplicationContext(),"Can't connect to server send", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            @Override
+//            public void messageArrived(String topic, MqttMessage message) throws Exception {
+//
+//            }
+//            @Override
+//            public void deliveryComplete(IMqttDeliveryToken token) {
+//
+//            }
+//        });
+//    }
 
     private void readAdafruitAccount(FirebaseCallback firebaseCallback) {
         DatabaseReference accountReference = FirebaseDatabase.getInstance().getReference("House").child(houseId).child("adafruit_account");
         accountReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                AdafruitAccount account = snapshot.getValue(AdafruitAccount.class);
-                if (account != null) {
-                    adafruitAccount.setUsername(account.getUsername());
-                    adafruitAccount.setPassword(account.getPassword());
-                    firebaseCallback.onCallback();
-                }
+//                AdafruitAccount account = snapshot.getValue(AdafruitAccount.class);
+//                if (account != null) {
+//                    adafruitAccount.setUsername(account.getUsername());
+//                    adafruitAccount.setPassword(account.getPassword());
+//                    firebaseCallback.onCallback();
+//                }
 
+                for(DataSnapshot data: snapshot.getChildren()){
+                    AdafruitAccount account = data.getValue(AdafruitAccount.class);
+                    listAccount.add(account);
+                }
+                user_1 = listAccount.get(0).getUsername();
+                user_2 = listAccount.get(1).getUsername();
+                firebaseCallback.onCallback();
             }
 
             @Override
@@ -323,6 +514,7 @@ public class HomeActivity extends AppCompatActivity {
                 address = user.getAddress();
                 phone = user.getPhone();
                 houseId = user.getHouse_id();
+                MainActivity.HousePath = houseId;
                 String[] name = username.split(" ");
                 txtWelcome.setText(String.format("Welcome %s !", name[name.length - 1]));
                 firebaseCallback.onCallback();

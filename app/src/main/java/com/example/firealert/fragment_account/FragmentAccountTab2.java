@@ -107,7 +107,7 @@ public class FragmentAccountTab2 extends Fragment {
 
 
     private void readUsers(FirebaseCallback firebaseCallback) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("House").child(houseId).child("users");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("House").child(houseId).child("User");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -192,7 +192,7 @@ public class FragmentAccountTab2 extends Fragment {
                     DatabaseReference addedUserReference = FirebaseDatabase.getInstance().getReference("User").child(userData.getUser_id());
                     addedUserReference.child("house_id").setValue(houseId);
                     userData.setHouse_id(houseId);
-                    DatabaseReference userInHouseReference = FirebaseDatabase.getInstance().getReference("House").child(houseId).child("users").child(userData.getUser_id());
+                    DatabaseReference userInHouseReference = FirebaseDatabase.getInstance().getReference("House").child(houseId).child("User").child(userData.getUser_id());
                     HashMap<String, String> userInformation = new HashMap<>();
                     userInformation.put("user_id", userData.getUser_id());
                     userInformation.put("email", userData.getEmail());
