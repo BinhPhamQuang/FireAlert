@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class MQTTService {
     final String serverUri= "tcp://io.adafruit.com:1883";
     private final String clientID = "123456";
@@ -36,13 +38,17 @@ public class MQTTService {
     public  ArrayList<String> rooms = new ArrayList<String>();
 
     public final String LED         = "{\"id\":\"1\",\"name\":\"LED\",\"data\":\"1\",\"unit\":\"\"}";
-    public final String LED_OFF     = "{\"id\":\"1\",\"name\":\"LED\",\"data\":\"2\",\"unit\":\"\"}";
+    public final String LED_OFF     = "{\"id\":\"1\",\"name\":\"LED\",\"data\":\"0\",\"unit\":\"\"}";
     public final String SPEAKER     = "{\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"1000\",\"unit\":\"\"}";
     public final String SPEAKER_OFF = "{\"id\":\"3\",\"name\":\"SPEAKER\",\"data\":\"0\",\"unit\":\"\"}";
     public final String DRV_PWM     = "{\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"240\",\"unit\":\"\"}";
     public final String DRV_PWM_OFF = "{\"id\":\"10\",\"name\":\"DRV_PWM\",\"data\":\"0\",\"unit\":\"\"}";
 
+
+
+
     public MqttAndroidClient mqttAndroidClient;
+
     public MQTTService(Context context, String username, String password, String clientID, boolean send) throws MqttException {
         this.username = username;
         this.password = password;
@@ -74,9 +80,8 @@ public class MQTTService {
 
             }
         });
-
         connect();
-        SetUpHouseDevice();
+
 
     }
 
@@ -101,7 +106,10 @@ public class MQTTService {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-
+                    if((send && rooms.size()==0)||(!send && gasTopic.size()==0))
+                        System.out.println("House Device");
+                        SetUpHouseDevice();
+//                    for (String topic: gasTopic) { subscribeToTopic(topic); }
                 }
 
                 @Override
@@ -116,19 +124,18 @@ public class MQTTService {
             ex.printStackTrace();
         }
     }
-    private  void subscribeToTopic(String topic)
+    public void subscribeToTopic(String topic)
     {
         try {
-
             mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Log.w("Mqtt","Subscribed !");
+                    Log.w("Mqtt","Subscribed: " + topic);
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.w("Mqtt","Subscribed fail !");
+                    Log.w("Mqtt","Subscribed fail: " + topic);
                 }
             });
 
@@ -154,29 +161,43 @@ public class MQTTService {
         }
     }
     private void SetUpHouseDevice(){
-        FireBaseHelper.getInstance().getHouseDevice(MainActivity.HousePath, new FireBaseHelper.DataStatus() {
+        FireBaseHelper.getInstance().getHouseDevice(MainActivity.HousePath + "/rooms", new FireBaseHelper.DataStatus() {
             @Override
             public <T> void dataIsLoaded(List<T> temp, List<String> keys) {
-                List<Room> lst =  (List<Room>) temp;
-                for(Room dataRoom: lst){
-                    if(!send) {
-                        gasTopic.add(dataRoom.gas);
-                        System.out.println(dataRoom.gas);
-                    }
-                    else {
-                        drvTopic.add(dataRoom.drv);
-                        System.out.println(dataRoom.drv);
-                        ledTopic.add(dataRoom.led);
-                        System.out.println(dataRoom.led);
-                        buzzerTopic.add(dataRoom.buzzer);
-                        System.out.println(dataRoom.buzzer);
-                    }
-                    rooms.add(dataRoom.name);
+                        if(send && MainActivity.firstAddSend){
+                            MainActivity.firstAddSend = false;
+                        }
+                        else{
+                            if(!send && MainActivity.firstAddGet){
+                                MainActivity.firstAddGet = false;
+                            }
+                            else{
+                                return ;
+                            }
+                        }
+                        List<Room> lst = (List<Room>) temp;
+                        System.out.println("list room count " + lst.size());
+                        for (Room dataRoom : lst) {
+                            if (!send) {
+                                gasTopic.add(dataRoom.gas);
+                                System.out.println(dataRoom.gas);
+                            } else {
+                                drvTopic.add(dataRoom.drv);
+                                System.out.println(dataRoom.drv);
+                                ledTopic.add(dataRoom.led);
+                                System.out.println(dataRoom.led);
+                                buzzerTopic.add(dataRoom.buzzer);
+                                System.out.println(dataRoom.buzzer);
+                                rooms.add(dataRoom.name);
+                            }
 
-                }
-                for (String topic: gasTopic){
-                    subscribeToTopic(topic);
-                }
+                        }
+                        for (String topic : gasTopic) {
+                            Log.d("Subscribe topic:", topic);
+                            subscribeToTopic(topic);
+                        }
+
+
             }
             @Override
             public void dataIsSent() {

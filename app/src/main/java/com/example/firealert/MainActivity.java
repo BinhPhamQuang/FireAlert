@@ -1,34 +1,34 @@
 package com.example.firealert;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.example.firealert.DAO.FireBaseHelper;
-import com.example.firealert.DTO.Room;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.firealert.DTO.UserData;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-    //Use for Choose Server
-    public static String Server_username_send;
-    public static String Server_password_send;
-    public static String Server_username_get;
-    public static String Server_password_get;
-
-
-    public static ArrayList<String> rooms = new ArrayList<String>();
-    //...........................
-
-    //Get house link
     public static String HousePath;
+    public static boolean firstAddSend = true;
+    public static boolean firstAddGet = true;
     ProgressBar progressBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,12 +77,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public static void SetUpServer(String username_get, String password_get, String username_send, String password_send, String path){
-        Server_username_send = username_send;
-        Server_password_send = password_send;
-        Server_username_get = username_get;
-        Server_password_get = password_get;
-        HousePath = path;
-    }
-
 }

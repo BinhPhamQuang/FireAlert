@@ -17,7 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.firealert.DTO.Room;
 import com.example.firealert.DTO.UserData;
+import com.example.firealert.Service.BackgroundService;
 import com.example.firealert.Service.MQTTService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,15 +34,15 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 
 public class SettingsActivity extends AppCompatActivity {
     TextView helloTextView;
-    Button btnSignOut;
-    MQTTService mqttServiceGet;
-    MQTTService mqttServiceSend;
-    private String address, phone, username;
+    private String userId, email, address, phone, username, houseId;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +50,12 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         helloTextView = (TextView) findViewById(R.id.txtview_hello);
 
+        userId = getIntent().getStringExtra("userId");
+        email = getIntent().getStringExtra("email");
         username = getIntent().getStringExtra("username");
         phone = getIntent().getStringExtra("phone");
         address = getIntent().getStringExtra("address");
+        houseId = getIntent().getStringExtra("houseId");
         helloTextView.setText(String.format("Hello %s!", username));
 
         ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
@@ -66,9 +71,17 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),AccountActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("email", email);
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
+                intent.putExtra("houseId", houseId);
+
+                intent.putExtra("user_1", getIntent().getStringExtra("user_1"));
+                intent.putExtra("pass_1", getIntent().getStringExtra("pass_1"));
+                intent.putExtra("user_2", getIntent().getStringExtra("user_2"));
+                intent.putExtra("pass_2", getIntent().getStringExtra("pass_2"));
                 startActivity(intent);
             }
         });
@@ -78,6 +91,11 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),AboutActivity.class);
+
+                intent.putExtra("user_1", getIntent().getStringExtra("user_1"));
+                intent.putExtra("pass_1", getIntent().getStringExtra("pass_1"));
+                intent.putExtra("user_2", getIntent().getStringExtra("user_2"));
+                intent.putExtra("pass_2", getIntent().getStringExtra("pass_2"));
                 startActivity(intent);
             }
         });
@@ -87,9 +105,17 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(), PrivacyActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("email", email);
                 intent.putExtra("address", address);
                 intent.putExtra("phone", phone);
                 intent.putExtra("username", username);
+                intent.putExtra("houseId", houseId);
+
+                intent.putExtra("user_1", getIntent().getStringExtra("user_1"));
+                intent.putExtra("pass_1", getIntent().getStringExtra("pass_1"));
+                intent.putExtra("user_2", getIntent().getStringExtra("user_2"));
+                intent.putExtra("pass_2", getIntent().getStringExtra("pass_2"));
                 startActivity(intent);
             }
         });
@@ -98,98 +124,30 @@ public class SettingsActivity extends AppCompatActivity {
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BackgroundService.user_1 = "";
+                BackgroundService.user_2 = "";
+                BackgroundService.pass_1 = "";
+                BackgroundService.pass_2 = "";
+                MainActivity.firstAddGet = true;
+                MainActivity.firstAddSend = true;
+                BackgroundService.mqttServiceGet = null;
+                BackgroundService.mqttServiceSend = null;
+                BackgroundService.haveRead = false;
+                HomeActivity.list = new ArrayList<>();
+                HomeActivity.adapter = null;
+                RoomDetailActivity.list = new ArrayList<>();
+                RoomDetailActivity.adapter = null;
+                HomeActivity.firstAdd = true;
+
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                
                 startActivity(intent);
             }
         });
 
 
-        try {
-
-            mqttServiceGet = new MQTTService(this,MainActivity.Server_username_get,MainActivity.Server_password_get,"123456",false);
-            mqttServiceSend = new MQTTService(this,MainActivity.Server_username_send,MainActivity.Server_password_send,"654321",true);
-        }
-        catch (MqttException e) {
-            e.printStackTrace();
-        }
-
-        mqttServiceGet.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-                Toast.makeText(getApplicationContext(),"Can't connect to server get", Toast.LENGTH_SHORT).show();
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-                Hashtable<String,String> mess = mqttServiceGet.getMessage(message.toString());
-
-                System.out.println(mess);
-                String data = mess.get("data");
-
-
-                int indexTopic = 0;
-                for (int i = 0; i < mqttServiceGet.gasTopic.size(); i++) {
-                    if (mqttServiceGet.gasTopic.get(i).equals(topic)) {
-                        indexTopic = i;
-                    }
-                }
-                if (data.equals("1")) {
-                    Log.d("Message Arrived: ", topic);
-                    if(HomeActivity.badge.getVisibility() == View.INVISIBLE) {
-                        mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER, mqttServiceSend.buzzerTopic.get(indexTopic));
-                        mqttServiceSend.sendDataMQTT(mqttServiceSend.LED, mqttServiceSend.ledTopic.get(indexTopic));
-                        Intent intent = new Intent(SettingsActivity.this, WarningActivity.class);
-                        // change this value for send data to another activity
-                        intent.putExtra("room_name", mqttServiceGet.rooms.get(indexTopic));
-                        //--------------------------------------------
-                        intent.putExtra("value", mess.get("data"));
-                        // must change this value by room_id
-                        intent.putExtra("indexTopic",indexTopic);
-                        startActivity(intent);
-                    }
-                }
-                else {
-                    HomeActivity.badge.setVisibility(View.INVISIBLE);
-                    mqttServiceSend.sendDataMQTT(mqttServiceSend.SPEAKER_OFF, mqttServiceSend.buzzerTopic.get(indexTopic));
-                    mqttServiceSend.sendDataMQTT(mqttServiceSend.LED_OFF, mqttServiceSend.ledTopic.get(indexTopic));
-                    mqttServiceSend.sendDataMQTT(mqttServiceSend.DRV_PWM_OFF,mqttServiceSend.drvTopic.get(indexTopic));
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
-        mqttServiceSend.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-                Toast.makeText(getApplicationContext(),"Can't connect to server send", Toast.LENGTH_SHORT).show();
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-            }
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
     }
 }

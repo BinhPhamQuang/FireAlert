@@ -27,8 +27,8 @@ public class History {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String room_id) {
+        this.id = room_id;
     }
 
     public String getName() {
