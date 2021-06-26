@@ -210,7 +210,7 @@ public class BackgroundService extends Service
                         startActivity(intent);
                         PendingIntent pendingIntent= PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
                         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.next)
+                                .setSmallIcon(R.drawable.bell)
                                 .setContentTitle("Warning !!!")
                                 .setContentText("Your "+roomName+" high gas concentration !")
                                 .setContentIntent(pendingIntent)

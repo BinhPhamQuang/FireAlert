@@ -68,7 +68,8 @@ public class WarningActivity extends AppCompatActivity {
                 Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
                 intent.putExtra("Class", "WarningActivity");
                 startActivity(intent);
-                onBackPressed();
+                finish();
+                //onBackPressed();
             }
         });
         loadValueInfo();
